@@ -991,11 +991,16 @@
   function roleLabel(r){return {mother:"Mother",father:"Father",child:"Child",legend:"Legendary",princess:"Princess",prince:"Prince",queen:"Queen",overseer:"Overseer",god:"God Parent",parent:"Founding Parent",member:"Member"}[r]||r;}
   function pad(i){return (i<9?"N°0":"N°")+(i+1);}
   /* 플레이트에 이름 전체를 띄우는 유령 글자 — 길이에 맞춰 크기 자동조절
-     (cqw = 플레이트 너비의 1%. 지원 안 되는 브라우저는 rem 값 사용) */
+     (cqw = 플레이트 너비의 1%. 지원 안 되는 브라우저는 rem 값 사용)
+     한글·한자는 영문보다 두 배 넓어서 폭 가중치 2로 계산 */
   function ghostHTML(text){
-    var len=Math.max(1,String(text).length);
-    var rem=Math.max(2,Math.min(8,34/len)).toFixed(1);
-    var cq=Math.min(58,165/len).toFixed(1);
+    var s=String(text),w=0;
+    for(var i=0;i<s.length;i++){
+      w+=/[ᄀ-ᇿ　-鿿가-힣豈-﫿＀-｠]/.test(s[i])?2:1;
+    }
+    w=Math.max(2,w);
+    var rem=Math.max(1.6,Math.min(8,28/w)).toFixed(2);
+    var cq=Math.min(58,138/w).toFixed(1);
     return '<span class="ghost" style="font-size:'+rem+'rem;font-size:min(58cqw,'+cq+'cqw)">'+esc(text)+'</span>';
   }
   function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return h;}
@@ -1167,9 +1172,11 @@
         '<span class="vog">since ’'+esc(String(m.since).slice(2))+'</span>'+
       '</div>'+
       '<figcaption class="pcap">'+
-        '<span class="role '+esc(m.role)+'">'+esc(roleLabel(m.role))+'</span>'+
+        (m.role==="custom"
+          ?'<span class="role member">'+esc(m.t||"Member")+'</span>'
+          :'<span class="role '+esc(m.role)+'">'+esc(roleLabel(m.role))+'</span>')+
         '<h4 class="pname">'+esc(m.n)+'</h4>'+
-        '<p class="pcredit">'+(m.t?esc(m.t):(m.cat?'The category — <b>'+esc(m.cat)+'</b>':'&nbsp;'))+'</p>'+
+        '<p class="pcredit">'+(m.t&&m.role!=="custom"?esc(m.t):(m.cat?'The category — <b>'+esc(m.cat)+'</b>':'&nbsp;'))+'</p>'+
         (m.bio?'<button class="bio-toggle" type="button" data-bio-toggle>▾ 소개 보기</button><div class="bio">'+esc(m.bio)+'</div>':'')+
         '<span class="edit-links">'+
           '<button class="mine-link gold-link" type="button" data-edit-member="'+esc(ref)+'" data-house="'+esc(houseId)+'">✎ Edit</button>'+
@@ -1302,9 +1309,10 @@
 
   var pendingPhotos={};
 
-  /* 멤버 역할 선택지 — 마지막 "직접 입력"과 함께 */
+  /* 멤버 역할 선택지 — 마지막의 "기타"를 고르면 직접 입력칸이 나타나요
+     (Legendary는 역할이 아닌 칭호라서 선택지에서 제외) */
   var ROLE_OPTS=[["mother","Mother"],["father","Father"],["princess","Princess"],["prince","Prince"],
-                 ["queen","Queen"],["overseer","Overseer"],["god","God Parent"],["legend","Legendary"],
+                 ["queen","Queen"],["overseer","Overseer"],["god","God Parent"],
                  ["child","Child"],["member","Member"]];
 
   /* 등록 폼 그리기 — kind에 따라 다른 입력칸 구성
@@ -1354,10 +1362,13 @@
         '</div>';
       }
       h+=fld("Name",txt("mname",M.n,"활동명",' required'));
-      h+='<div class="fgrid">'+
-        fld("Role",'<select class="finput" name="role">'+ROLE_OPTS.map(function(r){
-          return '<option value="'+r[0]+'"'+((M.role||"child")===r[0]?' selected':'')+'>'+r[1]+'</option>';}).join("")+'</select>')+
-        fld("직함 <b>(직접 입력)</b>",txt("mtitle",M.t,"예: 코리아 마더, 아시아 프린세스…"),"비워두면 Role 이름이 표시돼요")+
+      var isCustom=M.role==="custom";
+      h+=fld("Role",'<select class="finput" name="role">'+ROLE_OPTS.map(function(r){
+          return '<option value="'+r[0]+'"'+((M.role||"child")===r[0]?' selected':'')+'>'+r[1]+'</option>';}).join("")+
+          '<option value="custom"'+(isCustom?' selected':'')+'>기타 — 직접 입력</option></select>');
+      h+='<div class="frow" id="roleCustomWrap"'+(isCustom?'':' style="display:none"')+'>'+
+        '<label class="flabel">직함 직접 입력</label>'+
+        txt("roleCustom",isCustom?M.t:"","예: 코리아 오버시어, 갓마더, 트레일블레이저…")+
       '</div>';
       h+='<div class="fgrid">'+fld("The category <b>(optional)</b>",catInput("mcat",M.cat))+
         fld("Walking since",'<input class="finput" type="number" name="since" min="1970" max="2026" value="'+esc(M.since||2026)+'">')+'</div>';
@@ -1409,6 +1420,12 @@
     if(t.name==="mscene"){
       var wrap=document.getElementById("houseSelWrap");
       if(wrap)wrap.innerHTML=houseSelect(t.value);
+      return;
+    }
+    /* Role에서 "기타" 선택 → 직접 입력칸 표시 */
+    if(t.name==="role"){
+      var rcw=document.getElementById("roleCustomWrap");
+      if(rcw)rcw.style.display=t.value==="custom"?"":"none";
     }
   });
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)closeModal();});
@@ -1459,10 +1476,20 @@
 
     }else if(formState.kind==="member"){
       if(!v("mname"))return;
+      /* Role: 표준 선택 → 배지로 표시 / "기타" → 직접 입력한 직함이 배지가 됨.
+         표준 role을 유지한 채 다른 항목만 수정하면 기존 직함(t)은 보존 */
+      var roleSel=v("role")||"child";
       var fieldsM={
-        n:v("mname"),role:v("role")||"child",t:v("mtitle")||null,
+        n:v("mname"),
         cat:v("mcat")||"",since:+v("since")||2026,bio:v("mbio")||null
       };
+      if(roleSel==="custom"){
+        fieldsM.role="custom";fieldsM.t=v("roleCustom")||"Member";
+      }else{
+        fieldsM.role=roleSel;
+        var orig=formState.editMember&&formState.editMember.m;
+        fieldsM.t=(orig&&orig.role===roleSel)?(orig.t||null):null;
+      }
       if(pendingPhotos.mphoto)fieldsM.photo=pendingPhotos.mphoto;
 
       if(formState.editMember){
