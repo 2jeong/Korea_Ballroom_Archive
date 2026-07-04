@@ -465,6 +465,9 @@
   .lead-plate .ghost{font-size:15rem}
   .spread-title .est{font-family:var(--deco);text-transform:uppercase;letter-spacing:.32em;font-size:.64rem;color:var(--accent);margin:0 0 10px}
   .spread-title h2{font-family:var(--didone);font-weight:400;font-size:clamp(2.9rem,8vw,5.6rem);line-height:.85;margin:0;text-wrap:balance}
+  /* 한글 하우스 이름은 대체 글꼴이 줄 상자를 꽉 채워서 좁은 line-height 그대로면
+     위의 .est 라벨과 거의 붙어버려요 — 한글일 때만 살짝 띄워줌 */
+  .spread-title h2.cjk{line-height:1.25;margin-top:10px}
   .spread-title h2 em{font-style:italic;color:var(--accent)}
   .spread-title .motto{font-family:var(--didone);font-style:italic;font-size:clamp(1.15rem,2.4vw,1.6rem);color:var(--gold-hi);margin:20px 0 0;max-width:44ch;line-height:1.38}
   .stats{display:flex;gap:34px;margin-top:26px;padding-top:22px;border-top:1px solid var(--line);flex-wrap:wrap}
@@ -990,6 +993,11 @@
   }
   function roleLabel(r){return {mother:"Mother",father:"Father",child:"Child",legend:"Legendary",princess:"Princess",prince:"Prince",queen:"Queen",overseer:"Overseer",god:"God Parent",parent:"Founding Parent",member:"Member"}[r]||r;}
   function pad(i){return (i<9?"N°0":"N°")+(i+1);}
+  /* 한글·한자 포함 여부 — 세리프 영문 글꼴(Didot 등)엔 한글이 없어서
+     대체 글꼴로 렌더링되는데, 그 글꼴은 글자가 줄 상자를 꽉 채워서
+     line-height를 좁게 잡으면 위 요소와 거의 붙어 보임 (제목에서 보정용) */
+  function hasCJK(s){return /[ᄀ-ᇿ　-鿿가-힣豈-﫿＀-｠]/.test(String(s));}
+
   /* 플레이트에 이름 전체를 띄우는 유령 글자 — 길이에 맞춰 크기 자동조절
      (cqw = 플레이트 너비의 1%. 지원 안 되는 브라우저는 rem 값 사용)
      한글·한자는 영문보다 두 배 넓어서 폭 가중치 2로 계산 */
@@ -1101,12 +1109,17 @@
   /* 007 한 명의 카드 HTML을 만드는 함수 */
   function buildAgent(A){
     return '<figure class="portrait reveal"'+(A.id?' data-agent-id="'+esc(A.id)+'"':'')+' style="--accent:#F0D9B0">'+
-      '<div class="plate" style="'+plateVars(A.n)+'">'+photoLayers(A.photo,A.n)+'<span class="folio">007</span>'+(A.photo?'':ghostHTML(A.n))+'</div>'+
+      '<div class="plate" style="'+plateVars(A.n)+'">'+
+        photoLayers(A.photo,A.n)+
+        (A.honor?'<span class="tag gold">'+esc(A.honor)+'</span>':'')+
+        '<span class="folio">007</span>'+(A.photo?'':ghostHTML(A.n))+
+      '</div>'+
       '<figcaption class="pcap">'+
         '<span class="role agent">007</span>'+
         '<h4 class="pname">'+esc(A.n)+'</h4>'+
         '<p class="pcredit">The category — <b>'+esc(A.cat)+'</b><br>'+esc(A.note)+' · since ’'+esc(String(A.since).slice(2))+'</p>'+
-        (A.mine?'<button class="mine-link" type="button" data-del-agent="'+esc(A.id)+'">Remove — 내 등록</button>':'')+
+        (A.bio?'<button class="bio-toggle" type="button" data-bio-toggle>▾ 소개 보기</button><div class="bio">'+esc(A.bio)+'</div>':'')+
+        (A.mine?'<span class="edit-links"><button class="mine-link" type="button" data-del-agent="'+esc(A.id)+'">Remove — 내 등록</button></span>':'')+
       '</figcaption>'+
     '</figure>';
   }
@@ -1218,7 +1231,7 @@
       '<div class="spread-head">'+
         '<div class="spread-title">'+
           '<p class="est">'+esc(H.name[0])+' · '+(H.scene==="pier"&&H.pierType?esc(H.pierType)+' · Pier scene':esc(sceneOf(H.scene).label)+' scene')+(H.legendary?' · ★ Legendary':'')+(H.mine?' · yours':'')+'</p>'+
-          '<h2><em>'+esc(H.name[1])+'</em>'+(H.sym?' <span class="hsym">'+H.sym+'</span>':'')+'</h2>'+
+          '<h2'+(hasCJK(H.name[1])?' class="cjk"':'')+'><em>'+esc(H.name[1])+'</em>'+(H.sym?' <span class="hsym">'+H.sym+'</span>':'')+'</h2>'+
           (H.motto?'<p class="motto">'+esc(H.motto)+'</p>':'')+
           '<div class="stats">'+
             '<div class="stat"><div class="n">'+esc(H.founded)+'</div><div class="l">Founded</div></div>'+
@@ -1402,9 +1415,11 @@
       h+='<button class="btn msubmit" type="submit"><span>'+(editMember?"Save changes":"Join the House")+'</span></button>';
     }else{
       h+=fld("Name",txt("aname","","Remy 007",' required'),"007은 이름 뒤에 번호를 함께 써요 — “Remy 007”처럼");
+      h+=fld("칭호 <b>(optional)</b>",txt("ahonor","","Icon, Legendary, Up & Coming, Trailblazer…",' list="honorList"'),"프로필 우측 상단에 금빛 태그로 표시돼요");
       h+='<div class="fgrid">'+fld("The category",catInput("acat",""))+
         fld("Walking since",'<input class="finput" type="number" name="since" min="1970" max="2026" value="2026">')+'</div>';
       h+=fld("Status",'<select class="finput" name="note"><option>Seeking a house</option><option>Walking solo</option><option>Between houses</option></select>');
+      h+=fld("소개 / 약력 <b>(optional)</b>",'<textarea class="finput" name="abio" placeholder="약력, 수상 이력(예: ○○볼 Vogue Femme GP), 하고 싶은 이야기…"></textarea>');
       h+=photoField("aphoto");
       h+='<button class="btn msubmit" type="submit"><span>Walk as 007</span></button>';
     }
@@ -1554,7 +1569,7 @@
     }else{
       if(!v("aname"))return;
       var aid=newId();
-      store.agents.push({id:aid,n:v("aname"),cat:v("acat")||"Face",since:+v("since")||2026,note:v("note")||"Seeking a house",mine:true,photo:pendingPhotos.aphoto||null});
+      store.agents.push({id:aid,n:v("aname"),honor:v("ahonor")||null,cat:v("acat")||"Face",since:+v("since")||2026,note:v("note")||"Seeking a house",bio:v("abio")||null,mine:true,photo:pendingPhotos.aphoto||null});
       saveStore();buildTabs();closeModal();
       currentScene="007";syncTabs();renderIndex();
       flash('[data-agent-id="'+aid+'"]');
@@ -1565,6 +1580,13 @@
      내가 등록한 항목의 "Remove/Edit" 클릭을 감지해서
      확인 창을 띄운 뒤 저장소에서 지우거나 수정 폼을 엶 */
   index.addEventListener("click",function(e){
+    var bt=e.target.closest("[data-bio-toggle]");
+    if(bt){
+      e.stopPropagation();
+      var bio=bt.parentElement.querySelector(".bio");
+      if(bio){bio.classList.toggle("on");bt.textContent=bio.classList.contains("on")?"▴ 소개 접기":"▾ 소개 보기";}
+      return;
+    }
     var del=e.target.closest("[data-del-agent]");
     if(del){
       e.stopPropagation();
