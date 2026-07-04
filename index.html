@@ -1103,9 +1103,24 @@
      line-height를 좁게 잡으면 위 요소와 거의 붙어 보임 (제목에서 보정용) */
   function hasCJK(s){return /[ᄀ-ᇿ　-鿿가-힣豈-﫿＀-｠]/.test(String(s));}
 
-  /* 플레이트에 이름 전체를 띄우는 유령 글자 — 길이에 맞춰 크기 자동조절
+  /* 유령 글자 크기 계산용 캔버스 — 폰트가 실제로 어떻게 그려지는지
+     측정해서 크기를 정함 (글자 "개수"만 세는 것보다 정확함) */
+  var _ghostCtx=null;
+  function ghostFont(px){return 'italic 400 '+px+'px Didot,"Bodoni 72","Bodoni MT",Bodoni,"Playfair Display",Georgia,serif';}
+  function measureGhostWidth(str,px){
+    if(!_ghostCtx)_ghostCtx=document.createElement("canvas").getContext("2d");
+    _ghostCtx.font=ghostFont(px);
+    return _ghostCtx.measureText(str).width;
+  }
+  var _ghostRefWidth=null;
+  function ghostRefWidth(){
+    if(_ghostRefWidth==null)_ghostRefWidth=measureGhostWidth("Bodega",100);
+    return _ghostRefWidth;
+  }
+
+  /* 플레이트에 이름 전체를 띄우는 유령 글자 — 렌더 폭에 맞춰 크기 자동조절
      (cqw = 플레이트 너비의 1%. 지원 안 되는 브라우저는 rem 값 사용)
-     한글·한자는 영문보다 두 배 넓어서 폭 가중치 2로 계산 */
+     한글·한자는 영문보다 두 배 넓어서 두 줄 나누기 판단에서 가중치 2로 계산 */
   function ghostHTML(text){
     var s=String(text);
     function wlen(str){
@@ -1125,10 +1140,16 @@
       }
       if(best)lines=best;
     }
-    var w=Math.max(2,Math.max.apply(null,lines.map(wlen)));
-    var rem=Math.max(1.6,Math.min(8,28/w)).toFixed(2);
-    var cq=Math.min(58,138/w).toFixed(1);
-    return '<span class="ghost" style="font-size:'+rem+'rem;font-size:min(58cqw,'+cq+'cqw)">'+lines.map(esc).join("<br>")+'</span>';
+    /* 글자 "개수"가 아니라 캔버스로 실제 렌더 폭을 재서 크기를 정함 —
+       UU처럼 대문자만 있는 짧은 이름은 개수는 적어도 실제 폭은 넓어서
+       개수 기준으로는 계속 카드 밖까지 커져버렸음.
+       "Bodega" 렌더 폭을 기준(1.0)으로 삼아, 그보다 좁으면 1.0에서 멈추고
+       (더 안 커짐), 넓으면(글자가 많거나 UU처럼 넓은 대문자 위주) 비례해서 줄어듦 */
+    var lineWidth=Math.max.apply(null,lines.map(function(l){return measureGhostWidth(l,100);}));
+    var scale=Math.min(1,ghostRefWidth()/lineWidth);
+    var rem=Math.max(1.6,4.6667*scale).toFixed(2);
+    var cq=(23*scale).toFixed(1);
+    return '<span class="ghost" style="font-size:'+rem+'rem;font-size:'+cq+'cqw">'+lines.map(esc).join("<br>")+'</span>';
   }
   function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return h;}
   function plateVars(seed){
