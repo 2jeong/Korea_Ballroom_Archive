@@ -769,7 +769,8 @@
     return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
   }
   /* 사진 처리기 — 업로드된 사진을 3:4 비율로 잘라 축소·압축.
-     (원본 그대로 저장하면 브라우저 저장 공간이 금방 차기 때문) */
+     WebP(품질 78%)로 저장 — 같은 화질에서 JPEG보다 30~40% 작아요.
+     (아주 오래된 브라우저처럼 WebP를 못 만들면 JPEG로 자동 대체) */
   function processPhoto(file,cb){
     var img=new Image(),url=URL.createObjectURL(file);
     img.onload=function(){
@@ -780,7 +781,9 @@
       var dw=img.width*s,dh=img.height*s;
       ctx.drawImage(img,(W-dw)/2,(H-dh)/2,dw,dh);
       URL.revokeObjectURL(url);
-      cb(c.toDataURL("image/jpeg",.78));
+      var out=c.toDataURL("image/webp",.78);
+      if(out.indexOf("image/webp")===-1)out=c.toDataURL("image/jpeg",.78);
+      cb(out);
     };
     img.onerror=function(){URL.revokeObjectURL(url);cb(null);};
     img.src=url;
@@ -794,11 +797,13 @@
     return new Blob([arr],{type:mime});
   }
   function uploadPhoto(dataURL){
-    var path=newId()+".jpg";
+    var blob=dataURLtoBlob(dataURL);
+    var ext=blob.type==="image/webp"?".webp":".jpg";  // 실제 만들어진 포맷에 맞춰 확장자 결정
+    var path=newId()+ext;
     return fetch(SUPABASE_URL+"/storage/v1/object/photos/"+path,{
       method:"POST",
-      headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"image/jpeg"},
-      body:dataURLtoBlob(dataURL)
+      headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":blob.type},
+      body:blob
     }).then(function(r){
       if(!r.ok)throw new Error("사진 업로드에 실패했어요");
       return SUPABASE_URL+"/storage/v1/object/public/photos/"+path;
