@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="GRAND HALL — a register of the Houses. 1980s New York ballroom scene: Major, Kiki, Pier & the 007s. The category is family.">
+<meta property="og:title" content="GRAND HALL · The Ballroom Issue">
+<meta property="og:description" content="Every house has a name. Every child, a category. Here is the family book.">
+<meta name="theme-color" content="#120a0e">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>👑</text></svg>">
+<title>GRAND HALL · The Ballroom Issue</title>
+<style>
+  :root{
+    --ground:#120a0e;
+    --ground-2:#1a0e14;
+    --card:#1d1014;
+    --gold:#D9A441;
+    --gold-hi:#F0D9B0;
+    --gold-deep:#8a5f1e;
+    --rose:#D43E6E;
+    --jade:#2FA39B;
+    --amethyst:#9B7BD4;
+    --paper:#F5ECE0;
+    --paper-dim:#bfae9b;
+    --line:rgba(245,236,224,.14);
+    --accent:var(--gold);
+    --didone:"Didot","Bodoni 72","Bodoni MT","Bodoni","Playfair Display",Georgia,serif;
+    --deco:"Futura","Century Gothic","Avenir Next",-apple-system,system-ui,sans-serif;
+    --sans:"Avenir Next","Segoe UI",-apple-system,system-ui,"Helvetica Neue",Arial,sans-serif;
+    --foil:linear-gradient(105deg,var(--gold-deep) 0%,var(--gold) 30%,#fff3d6 50%,var(--gold) 70%,var(--gold-deep) 100%);
+  }
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;min-height:100vh;position:relative;overflow-x:hidden;
+    color:var(--paper);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(120% 75% at 50% -8%, rgba(212,62,110,.15), transparent 55%),
+      radial-gradient(80% 55% at 10% 6%, rgba(217,164,65,.09), transparent 55%),
+      var(--ground);
+  }
+  /* film grain + vignette */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:55;
+    background:radial-gradient(130% 100% at 50% 35%, transparent 55%, rgba(0,0,0,.6) 100%);
+  }
+
+  /* cursor spotlight */
+  #spot{
+    position:fixed;top:0;left:0;width:560px;height:560px;border-radius:50%;
+    pointer-events:none;z-index:50;opacity:0;transition:opacity .8s;
+    background:radial-gradient(circle, rgba(240,217,176,.09) 0%, rgba(212,62,110,.05) 40%, transparent 70%);
+    mix-blend-mode:screen;transform:translate(-50%,-50%);
+  }
+  body.lit #spot{opacity:1}
+
+  .wrap{max-width:1220px;margin:0 auto;padding:0 26px 110px;position:relative;z-index:1}
+
+  /* spine text */
+  .spine{
+    position:fixed;left:14px;top:50%;z-index:40;
+    transform:translateY(-50%) rotate(180deg);
+    writing-mode:vertical-rl;
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.52em;
+    font-size:.56rem;color:var(--paper-dim);opacity:.5;
+    pointer-events:none;
+  }
+  .spine b{color:var(--gold);font-weight:600}
+  @media(max-width:960px){.spine{display:none}}
+
+  /* ---------------- COVER ---------------- */
+  .cover{position:relative;padding:28px 26px 0;max-width:1220px;margin:0 auto}
+  .masthead-row{
+    display:flex;justify-content:space-between;align-items:baseline;gap:14px;
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.34em;
+    font-size:.62rem;color:var(--paper-dim);
+    border-bottom:1px solid var(--line);padding-bottom:14px;
+  }
+  .masthead-row .mid{letter-spacing:.5em;color:var(--gold)}
+  @media(max-width:560px){.masthead-row .mid{display:none}}
+
+  .cover h1{
+    font-family:var(--didone);font-weight:400;
+    font-size:clamp(3.4rem,15.5vw,11rem);
+    line-height:.84;letter-spacing:-.012em;text-align:center;
+    margin:.3em 0 0;text-wrap:balance;
+    text-shadow:0 6px 60px rgba(212,62,110,.32);
+  }
+  .cover h1 .amp{
+    font-style:italic;font-size:.66em;vertical-align:.06em;
+    background:var(--foil);background-size:220% 100%;
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:foil 7s linear infinite;
+  }
+  @keyframes foil{to{background-position:220% 0}}
+
+  /* boot sequence */
+  .boot-in{opacity:0;transform:translateY(16px);animation:boot .9s cubic-bezier(.2,.7,.2,1) forwards}
+  .boot-in.d1{animation-delay:.1s}.boot-in.d2{animation-delay:.32s}
+  .boot-in.d3{animation-delay:.55s}.boot-in.d4{animation-delay:.75s}.boot-in.d5{animation-delay:.95s}
+  @keyframes boot{to{opacity:1;transform:none}}
+
+  .rules{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px 0;margin:26px 0 0}
+  .coverlines{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:9px 28px;
+    max-width:80ch;margin:0 auto;
+  }
+  .coverlines span{font-family:var(--deco);text-transform:uppercase;letter-spacing:.26em;font-size:.63rem;color:var(--paper-dim)}
+  .coverlines span b{color:var(--paper);font-weight:600}
+  .standline{
+    text-align:center;font-family:var(--didone);font-style:italic;
+    font-size:clamp(1.05rem,2.6vw,1.55rem);color:var(--gold-hi);
+    margin:22px auto 0;max-width:42ch;text-wrap:balance;line-height:1.4;
+  }
+  .ko{text-align:center;font-size:.8rem;color:var(--paper-dim);opacity:.78;margin:10px auto 0;letter-spacing:.02em}
+
+  .cover-foot{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-top:26px;
+  }
+  .barcode{display:flex;align-items:flex-end;gap:10px}
+  .bars{
+    width:74px;height:30px;
+    background:repeating-linear-gradient(90deg,var(--paper) 0 2px,transparent 2px 4px,var(--paper) 4px 5px,transparent 5px 8px,var(--paper) 8px 11px,transparent 11px 13px);
+    opacity:.75;
+  }
+  .barcode small{font-family:var(--deco);text-transform:uppercase;letter-spacing:.2em;font-size:.5rem;color:var(--paper-dim);line-height:1.7}
+  .cover-foot .star{font-family:var(--deco);text-transform:uppercase;letter-spacing:.24em;font-size:.56rem;color:var(--paper-dim);text-align:right}
+  .cover-foot .star b{color:var(--gold);font-weight:600}
+
+  /* ---------------- ticker ---------------- */
+  .ticker{
+    margin-top:22px;border-top:1px solid var(--gold-deep);border-bottom:1px solid var(--gold-deep);
+    overflow:hidden;white-space:nowrap;position:relative;
+    background:linear-gradient(180deg,rgba(217,164,65,.07),rgba(217,164,65,.02));
+  }
+  .ticker .rail{display:inline-block;padding:11px 0;animation:tick 36s linear infinite}
+  @keyframes tick{to{transform:translateX(-50%)}}
+  .ticker span{
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.3em;
+    font-size:.6rem;color:var(--gold);padding:0 1.6em;
+  }
+  .ticker span i{font-family:var(--didone);font-style:italic;font-size:1.05rem;letter-spacing:.02em;color:var(--gold-hi);text-transform:none;vertical-align:-.08em}
+  .ticker .d{color:var(--rose)}
+
+  /* ---------------- toolbar ---------------- */
+  .toolbar{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin:34px 0}
+  .search{flex:1 1 250px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--line);padding:0 2px 9px}
+  .search input{flex:1;background:none;border:none;outline:none;color:var(--paper);font-family:var(--didone);font-style:italic;font-size:1.1rem}
+  .search input::placeholder{color:var(--paper-dim);opacity:.6}
+  .btn{
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.22em;font-size:.66rem;cursor:pointer;
+    padding:13px 24px;border:1px solid var(--gold);background:none;color:var(--gold);border-radius:0;position:relative;overflow:hidden;
+    transition:color .25s,letter-spacing .25s;
+  }
+  .btn::before{content:"";position:absolute;inset:0;background:var(--foil);background-size:220% 100%;transform:translateY(101%);transition:transform .3s cubic-bezier(.2,.7,.2,1)}
+  .btn:hover::before{transform:none}
+  .btn:hover{color:var(--ground);letter-spacing:.28em}
+  .btn span{position:relative;z-index:1}
+  .btn:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
+
+  /* ---------------- scene tabs ---------------- */
+  .depts{display:flex;flex-wrap:wrap;gap:8px 6px;border-bottom:1px solid var(--line);margin:0 0 10px}
+  .dept{
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.24em;font-size:.66rem;
+    background:none;border:none;cursor:pointer;color:var(--paper-dim);
+    padding:12px 16px;position:relative;transition:color .2s;
+  }
+  .dept:hover{color:var(--paper)}
+  .dept[aria-selected="true"]{color:var(--paper)}
+  .dept[aria-selected="true"]::after{content:"";position:absolute;left:16px;right:16px;bottom:-1px;height:2px;background:var(--accent-tab,var(--gold))}
+  .dept:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+  .dept .ct{font-family:var(--didone);font-style:italic;letter-spacing:0;font-size:.85rem;opacity:.7;margin-left:6px}
+
+  /* ---------------- scene section ---------------- */
+  .scene-section{position:relative;margin:46px 0 64px;}
+  .scene-ghost{
+    position:absolute;top:-34px;right:-10px;z-index:0;pointer-events:none;
+    font-family:var(--didone);font-weight:400;font-style:italic;
+    font-size:clamp(5rem,14vw,11rem);line-height:1;letter-spacing:.02em;
+    color:transparent;-webkit-text-stroke:1px color-mix(in srgb,var(--scene,var(--gold)) 55%,transparent);
+    opacity:.22;user-select:none;
+  }
+  .scene-head{position:relative;z-index:1;display:flex;align-items:baseline;gap:20px;flex-wrap:wrap;margin:0 0 28px;padding-bottom:15px;border-bottom:1px solid var(--line)}
+  .scene-head .sn{font-family:var(--deco);text-transform:uppercase;letter-spacing:.3em;font-size:.58rem;color:var(--scene,var(--gold))}
+  .scene-head h3{font-family:var(--didone);font-weight:400;font-size:2.1rem;line-height:1;margin:0;color:var(--paper)}
+  .scene-head h3 em{font-style:italic;color:var(--scene,var(--gold))}
+  .scene-head .blurb{font-family:var(--didone);font-style:italic;font-size:1rem;color:var(--paper-dim);margin:0;flex:1 1 260px;min-width:220px;text-wrap:balance}
+
+  /* ---------------- feature grid ---------------- */
+  .grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:34px 26px}
+
+  .feature{
+    --accent:var(--gold);
+    text-align:left;cursor:pointer;background:none;border:none;padding:0;color:inherit;font:inherit;
+    display:flex;flex-direction:column;
+  }
+  .plate{
+    position:relative;aspect-ratio:3/4;overflow:hidden;border:1px solid var(--line);
+    background:
+      /* spotlight beam */
+      conic-gradient(from var(--beam,12deg) at var(--spot,50%) -12%, transparent 41%, color-mix(in srgb,var(--accent) 34%,transparent) 50%, transparent 59%),
+      /* duotone wash */
+      radial-gradient(115% 85% at var(--spot,50%) 0%, color-mix(in srgb,var(--accent) 66%,#000), #0b0508 76%);
+    transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .35s;
+  }
+  /* halftone dots */
+  .plate::before{
+    content:"";position:absolute;inset:0;opacity:.16;mix-blend-mode:overlay;
+    background-image:radial-gradient(circle,rgba(255,255,255,.8) 1px,transparent 1.5px);
+    background-size:7px 7px;
+  }
+  /* grain */
+  .plate::after{
+    content:"";position:absolute;inset:0;opacity:.09;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='m'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23m)'/></svg>");
+  }
+  .feature:hover .plate,.feature:focus-visible .plate,.portrait:hover .plate{
+    transform:translateY(-8px);border-color:var(--accent);
+    box-shadow:0 34px 64px -30px #000, 0 0 70px -22px var(--accent);
+  }
+  .feature:focus-visible{outline:none}
+  .ghost{
+    position:absolute;inset:0;display:grid;place-items:center;z-index:1;
+    font-family:var(--didone);font-style:italic;font-weight:400;
+    font-size:12.5rem;line-height:1;
+    background:linear-gradient(168deg,#fff8ec 12%,var(--gold-hi) 38%,color-mix(in srgb,var(--accent) 75%,#fff) 88%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 12px 30px rgba(0,0,0,.55));
+    transition:transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .feature:hover .ghost{transform:scale(1.06) rotate(-1.5deg)}
+  .folio{position:absolute;top:14px;left:16px;z-index:2;font-family:var(--deco);letter-spacing:.2em;font-size:.62rem;color:var(--paper);opacity:.85}
+  .tag{
+    position:absolute;top:14px;right:16px;z-index:2;
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.22em;
+    font-size:.56rem;padding:5px 11px;font-weight:600;
+    background:rgba(18,10,14,.55);color:var(--paper);border:1px solid var(--line);backdrop-filter:blur(2px);
+  }
+  .tag.gold{
+    background:var(--foil);background-size:220% 100%;color:#241503;border:none;
+    animation:foil 6s linear infinite;
+  }
+  .plate .vog{
+    position:absolute;left:0;right:0;bottom:0;z-index:2;padding:15px 16px;
+    background:linear-gradient(180deg,transparent,rgba(6,3,5,.88));
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.24em;font-size:.6rem;color:var(--paper-dim);
+  }
+  .caption{padding:17px 2px 0}
+  .kicker{font-family:var(--deco);text-transform:uppercase;letter-spacing:.26em;font-size:.6rem;color:var(--accent);margin:0 0 7px}
+  .feature-name{font-family:var(--didone);font-weight:400;font-size:2.2rem;line-height:1;margin:0 0 9px;color:var(--paper)}
+  .standfirst{font-family:var(--didone);font-style:italic;font-size:1rem;color:var(--paper-dim);margin:0 0 13px;line-height:1.42;text-wrap:balance}
+  .credit{font-family:var(--deco);text-transform:uppercase;letter-spacing:.18em;font-size:.6rem;color:var(--paper-dim);border-top:1px solid var(--line);padding-top:11px;margin:0}
+  .credit b{color:var(--accent);font-weight:600}
+
+  .empty{grid-column:1/-1;font-family:var(--didone);font-style:italic;color:var(--paper-dim);font-size:1.2rem;text-align:center;padding:40px 0}
+
+  /* ---------------- registration modal ---------------- */
+  .modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:18px}
+  .modal[hidden]{display:none}
+  .modal-back{position:absolute;inset:0;background:rgba(8,4,6,.74);backdrop-filter:blur(7px)}
+  .modal-card{
+    position:relative;z-index:1;width:min(620px,100%);max-height:88vh;overflow-y:auto;
+    background:linear-gradient(180deg,#241318,#150a0f);
+    border:1px solid var(--gold-deep);
+    padding:36px 36px 32px;
+    box-shadow:0 50px 110px -30px #000, 0 0 90px -40px var(--gold);
+    animation:rise .4s ease;
+  }
+  .modal-card::before{content:"";position:absolute;inset:8px;border:1px solid var(--line);pointer-events:none}
+  .mclose{
+    position:absolute;top:10px;right:14px;z-index:2;background:none;border:none;cursor:pointer;
+    color:var(--paper-dim);font-family:var(--didone);font-size:1.7rem;line-height:1;padding:6px;
+  }
+  .mclose:hover{color:var(--gold)}
+  .mclose:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+  .mkicker{font-family:var(--deco);text-transform:uppercase;letter-spacing:.32em;font-size:.58rem;color:var(--gold);margin:0 0 8px}
+  .mtitle{font-family:var(--didone);font-weight:400;font-size:2.3rem;line-height:.95;margin:0}
+  .mtitle em{font-style:italic;color:var(--gold)}
+  .mtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:20px 0 24px;flex-wrap:wrap}
+  .mtab{
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.2em;font-size:.6rem;
+    background:none;border:none;cursor:pointer;color:var(--paper-dim);
+    padding:11px 13px;position:relative;transition:color .2s;
+  }
+  .mtab:hover{color:var(--paper)}
+  .mtab[aria-selected="true"]{color:var(--gold)}
+  .mtab[aria-selected="true"]::after{content:"";position:absolute;left:13px;right:13px;bottom:-1px;height:2px;background:var(--gold)}
+  .mtab:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+
+  .frow{margin-bottom:19px}
+  .fgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+  @media(max-width:520px){.fgrid{grid-template-columns:1fr}}
+  .flabel{display:block;font-family:var(--deco);text-transform:uppercase;letter-spacing:.24em;font-size:.56rem;color:var(--paper-dim);margin-bottom:7px}
+  .flabel b{color:var(--gold);font-weight:600}
+  .finput{
+    width:100%;background:none;border:none;border-bottom:1px solid var(--line);
+    color:var(--paper);font-family:var(--didone);font-style:italic;font-size:1.15rem;
+    padding:6px 2px;outline:none;border-radius:0;
+  }
+  .finput:focus{border-color:var(--gold)}
+  .finput::placeholder{color:var(--paper-dim);opacity:.5}
+  select.finput{font-family:var(--sans);font-style:normal;font-size:.95rem;cursor:pointer}
+  .finput option{color:#241318;background:#F5ECE0}
+  .fhint{font-family:var(--didone);font-style:italic;font-size:.82rem;color:var(--paper-dim);margin:7px 0 0;opacity:.85}
+  .fsep{border:none;border-top:1px solid var(--line);margin:24px 0 20px;position:relative}
+  .fsep::after{
+    content:attr(data-t);position:absolute;top:-9px;left:0;padding-right:12px;
+    background:linear-gradient(180deg,#241318,#1f1015);
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.26em;font-size:.54rem;color:var(--gold);
+  }
+  .swatches{display:flex;gap:12px;flex-wrap:wrap;padding-top:4px}
+  .sw{position:relative;cursor:pointer}
+  .sw input{position:absolute;opacity:0;inset:0;cursor:pointer}
+  .sw span{
+    display:block;width:32px;height:32px;border-radius:50%;background:var(--c);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
+    transition:transform .15s;
+  }
+  .sw:hover span{transform:scale(1.12)}
+  .sw input:checked+span{box-shadow:0 0 0 3px var(--ground),0 0 0 5px var(--c),0 0 18px var(--c)}
+  .sw input:focus-visible+span{outline:2px solid var(--rose);outline-offset:3px}
+  .msubmit{margin-top:10px;width:100%}
+
+  /* mine controls */
+  .mine-link{
+    background:none;border:none;cursor:pointer;padding:0;margin-top:9px;display:inline-block;
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.18em;font-size:.54rem;color:var(--rose);
+  }
+  .mine-link:hover{text-decoration:underline}
+  .mine-link:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+  .manage{display:flex;gap:22px;margin:-6px 0 26px}
+  .manage .mine-link{margin:0;font-size:.6rem}
+  .manage .gold-link{color:var(--gold)}
+
+  @keyframes flashk{0%{box-shadow:0 0 0 3px var(--accent),0 0 80px -6px var(--accent)}100%{box-shadow:none}}
+  .flash .plate{animation:flashk 2.6s ease forwards}
+
+  /* ---------------- photos (duotone treatment) ---------------- */
+  .plate .photo{
+    position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;
+    filter:grayscale(1) contrast(1.07) brightness(.9);
+  }
+  .plate .tint{position:absolute;inset:0;z-index:0;background:var(--accent);mix-blend-mode:color;opacity:.82}
+  .plate .shade{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(10,5,8,.22),transparent 32%,transparent 52%,rgba(6,3,5,.66))}
+  .plate::before,.plate::after{z-index:2}
+
+  .vh{position:absolute;opacity:0;width:1px;height:1px;overflow:hidden}
+  .fphoto{display:flex;align-items:center;gap:14px}
+  .fbtn{
+    cursor:pointer;font-family:var(--deco);text-transform:uppercase;letter-spacing:.2em;font-size:.58rem;
+    border:1px solid var(--line);color:var(--paper-dim);padding:10px 16px;
+    transition:border-color .2s,color .2s;
+  }
+  .fbtn:hover{border-color:var(--gold);color:var(--gold)}
+  .vh:focus-visible+.fbtn{outline:2px solid var(--rose);outline-offset:2px}
+  .fphoto .prev{
+    width:46px;height:61px;object-fit:cover;display:none;
+    border:1px solid var(--gold-deep);filter:grayscale(1) contrast(1.05);
+  }
+  .fphoto .prev.on{display:block}
+
+  /* scroll reveal */
+  .reveal{opacity:0;transform:translateY(22px)}
+  .reveal.in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+
+  /* ---------------- DETAIL spread ---------------- */
+  .detail{display:none}
+  .detail.on{display:block;animation:rise .5s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .back{background:none;border:none;color:var(--paper-dim);cursor:pointer;font-family:var(--deco);text-transform:uppercase;letter-spacing:.24em;font-size:.66rem;padding:6px 0;margin:8px 0 20px;display:inline-flex;gap:9px;align-items:center}
+  .back:hover{color:var(--accent)}
+  .back:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+
+  .spread-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:40px;align-items:end;margin-bottom:26px}
+  .lead-plate{position:relative;aspect-ratio:4/5;overflow:hidden;border:1px solid var(--line)}
+  .lead-plate .ghost{font-size:15rem}
+  .spread-title .est{font-family:var(--deco);text-transform:uppercase;letter-spacing:.32em;font-size:.64rem;color:var(--accent);margin:0 0 10px}
+  .spread-title h2{font-family:var(--didone);font-weight:400;font-size:clamp(2.9rem,8vw,5.6rem);line-height:.85;margin:0;text-wrap:balance}
+  .spread-title h2 em{font-style:italic;color:var(--accent)}
+  .spread-title .motto{font-family:var(--didone);font-style:italic;font-size:clamp(1.15rem,2.4vw,1.6rem);color:var(--gold-hi);margin:20px 0 0;max-width:28ch;line-height:1.38}
+  .stats{display:flex;gap:34px;margin-top:26px;padding-top:22px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .stat .n{font-family:var(--didone);font-size:2.1rem;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
+  .stat .l{font-family:var(--deco);text-transform:uppercase;letter-spacing:.2em;font-size:.56rem;color:var(--paper-dim);margin-top:6px}
+
+  .house-notes{
+    columns:1;max-width:66ch;margin:0 0 50px;
+    font-size:1.02rem;color:var(--paper-dim);line-height:1.75;
+  }
+  .house-notes::first-letter{
+    font-family:var(--didone);font-style:italic;
+    font-size:4.3em;line-height:.78;color:var(--accent);
+    float:left;padding:.06em .12em 0 0;
+  }
+
+  .roster-label{font-family:var(--deco);text-transform:uppercase;letter-spacing:.3em;font-size:.68rem;color:var(--paper-dim);margin:0 0 24px;display:flex;align-items:center;gap:16px}
+  .roster-label::after{content:"";flex:1;height:1px;background:var(--line)}
+  .roster-label b{font-family:var(--didone);font-style:italic;letter-spacing:0;text-transform:none;font-size:1.35rem;color:var(--accent)}
+
+  .roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:26px;margin-bottom:52px}
+  .parents-roster{grid-template-columns:repeat(auto-fill,minmax(235px,1fr))}
+  .portrait{margin:0}
+  .portrait .ghost{font-size:7.2rem}
+  .parents-roster .portrait .ghost{font-size:8.8rem}
+  .pcap{padding:14px 2px 0}
+  .role{display:inline-block;font-family:var(--deco);text-transform:uppercase;letter-spacing:.22em;font-size:.56rem;padding:4px 10px;margin-bottom:9px}
+  .role.mother{background:var(--rose);color:#fff}
+  .role.father{background:var(--jade);color:var(--ground)}
+  .role.legend{background:var(--foil);background-size:220% 100%;color:#241503;animation:foil 6s linear infinite}
+  .role.child{border:1px solid var(--accent);color:var(--accent)}
+  .role.agent{background:var(--paper);color:var(--ground);letter-spacing:.3em}
+  .pname{font-family:var(--didone);font-weight:400;font-size:1.4rem;margin:0 0 7px;color:var(--paper);line-height:1.05}
+  .pcredit{font-family:var(--deco);text-transform:uppercase;letter-spacing:.16em;font-size:.58rem;color:var(--paper-dim);line-height:1.75}
+  .pcredit b{color:var(--accent);font-weight:600}
+
+  /* colophon footer */
+  footer{
+    margin-top:60px;border-top:1px solid var(--line);padding-top:26px;
+    display:flex;flex-direction:column;align-items:center;gap:9px;
+  }
+  footer .mark{font-family:var(--didone);font-style:italic;font-size:1.5rem;color:var(--gold)}
+  footer p{margin:0;font-family:var(--deco);text-transform:uppercase;letter-spacing:.32em;font-size:.58rem;color:var(--paper-dim);text-align:center}
+
+  @media (max-width:640px){
+    .spread-head{grid-template-columns:1fr}
+    .lead-plate{max-width:330px}
+    .toolbar{flex-direction:column;align-items:stretch}
+    .btn{text-align:center}
+    .scene-ghost{font-size:4.6rem;top:-20px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .boot-in,.reveal{opacity:1!important;transform:none!important}
+    #spot{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div id="spot" aria-hidden="true"></div>
+<span class="spine" aria-hidden="true">Grand <b>&amp;</b> Hall — the Ballroom Issue · Spring 1988 · New York City</span>
+
+<header class="cover">
+  <div class="masthead-row boot-in d1">
+    <span>Vol. III · N°4</span>
+    <span class="mid">The Ballroom Issue</span>
+    <span>Spring 1988</span>
+  </div>
+  <h1 class="boot-in d2">GRAND <span class="amp">&amp;</span> HALL</h1>
+  <div class="rules boot-in d3">
+    <div class="coverlines">
+      <span><b>The Houses</b> — a register</span>
+      <span>Mothers, Fathers <b>&amp; their children</b></span>
+      <span>Major · Kiki · Pier <b>&amp; the 007s</b></span>
+    </div>
+  </div>
+  <p class="standline boot-in d4">Every house has a name. Every child, a category. Here is the family book.</p>
+  <p class="ko boot-in d4">하우스 명부 · 각자 자신의 하우스와 구성원을 등록하고, 모두가 함께 봅니다</p>
+  <div class="cover-foot boot-in d5">
+    <div class="barcode" aria-hidden="true">
+      <div class="bars"></div>
+      <small>NO SHADE<br>ONE BALL</small>
+    </div>
+    <p class="star">featuring<br><b>the Mothers of New York</b></p>
+  </div>
+  <div class="ticker boot-in d5" aria-hidden="true"><div class="rail" id="rail"></div></div>
+</header>
+
+<div class="wrap">
+  <section id="directory">
+    <div class="toolbar">
+      <label class="search">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+        <input id="q" type="search" placeholder="Search a house, or a name…" aria-label="Search houses">
+      </label>
+      <button class="btn" id="addBtn" type="button"><span>Register your House</span></button>
+    </div>
+
+    <nav class="depts" id="depts" role="tablist" aria-label="Scenes"></nav>
+    <div id="index"></div>
+  </section>
+
+  <section class="detail" id="detail" aria-live="polite"></section>
+
+  <footer>
+    <span class="mark">G&amp;H</span>
+    <p>Grand &amp; Hall — published by the children, for the children · New York City</p>
+    <p>The category is <span style="color:var(--gold)">family</span></p>
+  </footer>
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal-back" data-close></div>
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <button class="mclose" type="button" data-close aria-label="닫기">×</button>
+    <p class="mkicker">Registration desk · 등록</p>
+    <h3 class="mtitle" id="mTitle">Walk <em>with us</em></h3>
+    <div class="mtabs" id="mTabs" role="tablist" aria-label="등록 종류"></div>
+    <form id="mForm" novalidate></form>
+    <datalist id="catList"></datalist>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SCENES=[
+    {id:"all",  label:"All"},
+    {id:"major",label:"Major", color:"#D9A441", ghost:"Major",  blurb:"The established houses — grand prizes, legendary status, and the long memory of the ball."},
+    {id:"kiki", label:"Kiki",  color:"#D43E6E", ghost:"Kiki",   blurb:"The kiki scene — younger, gentler, built by and for the community."},
+    {id:"pier", label:"Pier",  color:"#2FA39B", ghost:"Pier",   blurb:"Born on the Christopher Street piers, where the houseless found each other."},
+    {id:"007",  label:"007",   color:"#F0D9B0", ghost:"007",    blurb:"Free agents — walking without a house, for now. The category is courage."}
+  ];
+
+  var HOUSES=[
+    {id:"aurora",scene:"major",name:["House of","Aurora"],accent:"#D9A441",founded:1979,legendary:true,
+     motto:"We do not chase the light — we are the light.",
+     notes:"Nine years, four grand prizes, and one rule: you arrive as yourself or not at all. Aurora walks first and leaves last, and every child who wears the name knows the floor is not a stage — it is a home with the lights turned up.",
+     members:[
+       {n:"Simone Aurora",role:"mother",cat:"Face",since:1979},
+       {n:"Castor Aurora",role:"father",cat:"Executive Realness",since:1981},
+       {n:"Bijou Aurora",role:"child",cat:"Vogue Femme",since:1984},
+       {n:"Theo Aurora",role:"child",cat:"Runway",since:1985},
+       {n:"Liv Aurora",role:"legend",cat:"Face",since:1982},
+       {n:"Marcel Aurora",role:"child",cat:"Body",since:1986}
+     ]},
+    {id:"seraphine",scene:"major",name:["House of","Séraphine"],accent:"#D43E6E",founded:1981,legendary:true,
+     motto:"Grace is a weapon, and we came armed.",
+     notes:"Séraphine does not raise its voice. It raises an eyebrow, and the judges reach for their tens. Mère Séraphine has walked runway since before half the kiki scene was born, and her children inherit the posture before they inherit the name.",
+     members:[
+       {n:"Mère Séraphine",role:"mother",cat:"Runway",since:1981},
+       {n:"Dominic Séraphine",role:"father",cat:"Body",since:1982},
+       {n:"Pearl Séraphine",role:"legend",cat:"Femme Realness",since:1981},
+       {n:"Jun Séraphine",role:"child",cat:"Face",since:1985},
+       {n:"Isadora Séraphine",role:"child",cat:"Vogue Femme",since:1986},
+       {n:"Kit Séraphine",role:"child",cat:"Runway",since:1988}
+     ]},
+    {id:"mirage",scene:"kiki",name:["House of","Mirage"],accent:"#2FA39B",founded:1986,legendary:false,
+     motto:"Now you see us — and you will not forget.",
+     notes:"The youngest mother in the scene keeps the loudest table. Mirage was founded in a diner booth at 4 a.m. with three runaways and one shared plate of fries, and it has never once walked quietly since.",
+     members:[
+       {n:"Yuki Mirage",role:"mother",cat:"Bizarre",since:1986},
+       {n:"Andre Mirage",role:"father",cat:"Butch Realness",since:1986},
+       {n:"Coco Mirage",role:"child",cat:"Performance",since:1987},
+       {n:"Rafael Mirage",role:"child",cat:"Vogue Femme",since:1988},
+       {n:"Star Mirage",role:"child",cat:"Face",since:1989}
+     ]},
+    {id:"velour",scene:"kiki",name:["House of","Velour"],accent:"#9B7BD4",founded:1987,legendary:false,
+     motto:"Soft on the outside, undefeated on the floor.",
+     notes:"Velour keeps a spare bed, a sewing machine, and a strict curfew on school nights. The trophies live in the kitchen because that is where the family does. Do not mistake the softness — they have not lost a performance category in a year.",
+     members:[
+       {n:"Coco Velour",role:"mother",cat:"Performance",since:1987},
+       {n:"Trey Velour",role:"father",cat:"Realness",since:1987},
+       {n:"Sunny Velour",role:"child",cat:"Vogue Femme",since:1988},
+       {n:"Baby Velour",role:"child",cat:"Face",since:1990}
+     ]},
+    {id:"hudson",scene:"pier",name:["House of","Hudson"],accent:"#7FA6C9",founded:1984,legendary:false,
+     motto:"The river took nobody. We kept each other.",
+     notes:"Before Hudson had a name it had a spot on the pier and a rule that nobody sleeps alone in the cold. The house walks the way the river moves — unhurried, certain, impossible to hold back.",
+     members:[
+       {n:"Diana Hudson",role:"mother",cat:"Runway",since:1984},
+       {n:"Wolfe Hudson",role:"father",cat:"Body",since:1985},
+       {n:"River Hudson",role:"child",cat:"Vogue Femme",since:1987},
+       {n:"Storm Hudson",role:"child",cat:"Bizarre",since:1988}
+     ]},
+    {id:"obsidian",scene:"pier",name:["House of","Obsidian"],accent:"#C77B4E",founded:1985,legendary:false,
+     motto:"Cut from the dark, sharp on every edge.",
+     notes:"Obsidian collects the ones the other houses overlooked and returns them to the floor gleaming. Ravenna reads the category rules once, finds the seam, and sends a child through it like light through glass.",
+     members:[
+       {n:"Ravenna Obsidian",role:"mother",cat:"Bizarre",since:1985},
+       {n:"Sol Obsidian",role:"father",cat:"Executive Realness",since:1985},
+       {n:"Onyx Obsidian",role:"child",cat:"Body",since:1987},
+       {n:"Mina Obsidian",role:"child",cat:"Performance",since:1988}
+     ]}
+  ];
+
+  var AGENTS=[
+    {n:"Remy 007",cat:"Vogue Femme",since:1987,note:"Seeking a house"},
+    {n:"Ash 007",cat:"Face",since:1988,note:"Walking solo"},
+    {n:"Dion 007",cat:"Runway",since:1986,note:"Between houses"},
+    {n:"Indra 007",cat:"Body",since:1989,note:"Seeking a house"}
+  ];
+
+  // ---------- registry store (browser-local) ----------
+  var KEY="grandhall.reg.v1";
+  function loadStore(){
+    try{
+      var s=JSON.parse(localStorage.getItem(KEY));
+      if(s&&s.houses&&s.members&&s.agents)return s;
+    }catch(e){}
+    return {houses:[],members:{},agents:[]};
+  }
+  var store=loadStore();
+  function saveStore(){
+    try{localStorage.setItem(KEY,JSON.stringify(store))}
+    catch(e){alert("브라우저 저장 공간이 가득 찼어요 — 사진이 있는 등록을 몇 개 삭제한 뒤 다시 시도해주세요.")}
+  }
+  function newId(){return "u"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36)}
+  function mergedHouses(){
+    return HOUSES.map(function(H){
+      var extra=store.members[H.id]||[];
+      return extra.length?Object.assign({},H,{members:H.members.concat(extra)}):H;
+    }).concat(store.houses);
+  }
+  function mergedAgents(){return AGENTS.concat(store.agents)}
+  function esc(s){
+    return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+  }
+  // photo → 3:4 crop, downscale, jpeg compress (fits browser storage)
+  function processPhoto(file,cb){
+    var img=new Image(),url=URL.createObjectURL(file);
+    img.onload=function(){
+      var W=520,H=693,c=document.createElement("canvas");
+      c.width=W;c.height=H;
+      var ctx=c.getContext("2d");
+      var s=Math.max(W/img.width,H/img.height);
+      var dw=img.width*s,dh=img.height*s;
+      ctx.drawImage(img,(W-dw)/2,(H-dh)/2,dw,dh);
+      URL.revokeObjectURL(url);
+      cb(c.toDataURL("image/jpeg",.78));
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);cb(null);};
+    img.src=url;
+  }
+  function photoLayers(p,alt){
+    return p?'<img class="photo" src="'+p+'" alt="'+esc(alt||"")+'"><span class="tint"></span><span class="shade"></span>':'';
+  }
+
+  // ---------- helpers ----------
+  function sceneOf(id){return SCENES.filter(function(s){return s.id===id})[0];}
+  function initials(name){
+    var p=name.replace(/[éèê]/g,"e").split(/\s+/);
+    return (((p[0]||"")[0]||"")+((p[1]||"")[0]||"")).toUpperCase();
+  }
+  function roleLabel(r){return {mother:"Mother",father:"Father",child:"Child",legend:"Legendary"}[r]||r;}
+  function pad(i){return (i<9?"N°0":"N°")+(i+1);}
+  function hash(s){var h=0;for(var i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;}return h;}
+  function plateVars(seed){
+    var h=hash(seed);
+    var spot=32+(h%37);          /* 32–68% spotlight x */
+    var beam=(h%29)-14;          /* -14 – +14deg beam angle */
+    return '--spot:'+spot+'%;--beam:'+beam+'deg;';
+  }
+
+  // ---------- ticker ----------
+  var CALLS=["Face","Vogue Femme","Executive Realness","Body","Runway","Bizarre","Butch Realness","Performance"];
+  (function(){
+    var one="";
+    CALLS.forEach(function(c){one+='<span>The category is <i>'+c+'</i></span><span class="d">◆</span>';});
+    one+='<span>Tens, tens, <i>tens across the board</i></span><span class="d">◆</span>';
+    document.getElementById("rail").innerHTML=one+one; /* duplicate for seamless loop */
+  })();
+
+  // ---------- spotlight ----------
+  (function(){
+    var spot=document.getElementById("spot");
+    if(!window.matchMedia||!matchMedia("(pointer:fine)").matches)return;
+    if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+    var x=0,y=0,raf=null;
+    document.addEventListener("mousemove",function(e){
+      x=e.clientX;y=e.clientY;document.body.classList.add("lit");
+      if(!raf)raf=requestAnimationFrame(function(){spot.style.transform="translate("+(x-280)+"px,"+(y-280)+"px)";raf=null;});
+    });
+  })();
+
+  // ---------- reveal on scroll ----------
+  var io=("IntersectionObserver" in window)?new IntersectionObserver(function(es){
+    es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
+  },{rootMargin:"0px 0px -8% 0px"}):null;
+  function observe(root){
+    if(!io){Array.prototype.forEach.call(root.querySelectorAll(".reveal"),function(el){el.classList.add("in");});return;}
+    Array.prototype.forEach.call(root.querySelectorAll(".reveal"),function(el,i){
+      el.style.transitionDelay=(i%4)*70+"ms";io.observe(el);
+    });
+  }
+
+  // ---------- render ----------
+  var index=document.getElementById("index");
+  var depts=document.getElementById("depts");
+  var directory=document.getElementById("directory");
+  var detail=document.getElementById("detail");
+  var qInput=document.getElementById("q");
+  var currentScene="all";
+  var folioN=0;
+
+  function buildFeature(H){
+    folioN++;
+    var parent=H.members.filter(function(m){return m.role==="mother"})[0]||H.members[0];
+    return '<button class="feature reveal" type="button" data-id="'+esc(H.id)+'" style="--accent:'+esc(H.accent)+'" aria-label="Open '+esc(H.name.join(" "))+'">'+
+      '<div class="plate" style="'+plateVars(H.id)+'">'+
+        photoLayers(parent&&parent.photo,parent&&parent.n)+
+        '<span class="folio">'+pad(folioN-1)+'</span>'+
+        '<span class="tag'+(H.legendary?' gold':'')+'">'+(H.legendary?'★ Legendary':esc(sceneOf(H.scene).label))+'</span>'+
+        (parent&&parent.photo?'':'<span class="ghost">'+esc(H.name[1][0])+'</span>')+
+        '<span class="vog">'+H.members.length+' walking · est. '+esc(H.founded)+'</span>'+
+      '</div>'+
+      '<div class="caption">'+
+        '<p class="kicker">'+esc(H.name[0])+(H.legendary?' · Legendary':'')+(H.mine?' · <span style="color:var(--gold)">yours</span>':'')+'</p>'+
+        '<h3 class="feature-name">'+esc(H.name[1])+'</h3>'+
+        '<p class="standfirst">"'+esc(H.motto)+'"</p>'+
+        (parent?'<p class="credit">Mother — <b>'+esc(parent.n)+'</b></p>':'')+
+      '</div>'+
+    '</button>';
+  }
+
+  function buildAgent(A){
+    return '<figure class="portrait reveal"'+(A.id?' data-agent-id="'+esc(A.id)+'"':'')+' style="--accent:#F0D9B0">'+
+      '<div class="plate" style="'+plateVars(A.n)+'">'+photoLayers(A.photo,A.n)+'<span class="folio">007</span>'+(A.photo?'':'<span class="ghost">'+esc(initials(A.n))+'</span>')+'</div>'+
+      '<figcaption class="pcap">'+
+        '<span class="role agent">007</span>'+
+        '<h4 class="pname">'+esc(A.n)+'</h4>'+
+        '<p class="pcredit">The category — <b>'+esc(A.cat)+'</b><br>'+esc(A.note)+' · since ’'+esc(String(A.since).slice(2))+'</p>'+
+        (A.mine?'<button class="mine-link" type="button" data-del-agent="'+esc(A.id)+'">Remove — 내 등록</button>':'')+
+      '</figcaption>'+
+    '</figure>';
+  }
+
+  function sceneTitle(sc){
+    if(sc.id==="007")return "<em>007</em> — the houseless";
+    if(sc.id==="major")return "The <em>Major</em> houses";
+    return "The <em>"+sc.label+"</em> scene";
+  }
+
+  function buildTabs(){
+    depts.innerHTML="";
+    SCENES.forEach(function(s){
+      var b=document.createElement("button");
+      b.className="dept";b.type="button";b.setAttribute("role","tab");
+      b.dataset.scene=s.id;
+      b.setAttribute("aria-selected",s.id===currentScene?"true":"false");
+      if(s.color)b.style.setProperty("--accent-tab",s.color);
+      var HS=mergedHouses(),AG=mergedAgents();
+      var ct=s.id==="all"?(HS.length+AG.length):(s.id==="007"?AG.length:HS.filter(function(h){return h.scene===s.id}).length);
+      b.innerHTML=s.label+'<span class="ct">'+ct+'</span>';
+      b.addEventListener("click",function(){currentScene=s.id;syncTabs();renderIndex();});
+      depts.appendChild(b);
+    });
+  }
+  function syncTabs(){
+    Array.prototype.forEach.call(depts.children,function(b){
+      b.setAttribute("aria-selected",b.dataset.scene===currentScene?"true":"false");
+    });
+  }
+
+  function renderIndex(){
+    index.innerHTML="";folioN=0;
+    var f=(qInput.value||"").trim().toLowerCase();
+    var list=currentScene==="all"?["major","kiki","pier","007"]:[currentScene];
+    var html="",any=false;
+    list.forEach(function(sid){
+      var sc=sceneOf(sid);
+      if(sid==="007"){
+        var ags=mergedAgents().filter(function(A){return !f||(A.n+" "+A.cat).toLowerCase().indexOf(f)>-1;});
+        if(!ags.length)return;any=true;
+        html+='<section class="scene-section" style="--scene:'+sc.color+'">'+
+          '<span class="scene-ghost" aria-hidden="true">'+sc.ghost+'</span>'+
+          '<div class="scene-head"><span class="sn">'+ags.length+' walking solo</span><h3>'+sceneTitle(sc)+'</h3><p class="blurb">'+sc.blurb+'</p></div>'+
+          '<div class="grid">'+ags.map(buildAgent).join("")+'</div></section>';
+      }else{
+        var hs=mergedHouses().filter(function(H){return H.scene===sid;}).filter(function(H){
+          if(!f)return true;var hay=(H.name.join(" ")+" "+H.members.map(function(m){return m.n}).join(" ")).toLowerCase();return hay.indexOf(f)>-1;});
+        if(!hs.length)return;any=true;
+        html+='<section class="scene-section" style="--scene:'+sc.color+'">'+
+          '<span class="scene-ghost" aria-hidden="true">'+sc.ghost+'</span>'+
+          '<div class="scene-head"><span class="sn">'+hs.length+(hs.length===1?" house":" houses")+'</span><h3>'+sceneTitle(sc)+'</h3><p class="blurb">'+sc.blurb+'</p></div>'+
+          '<div class="grid">'+hs.map(buildFeature).join("")+'</div></section>';
+      }
+    });
+    index.innerHTML=any?html:'<p class="empty">No one by that name walks tonight.</p>';
+    Array.prototype.forEach.call(index.querySelectorAll(".feature"),function(btn){
+      btn.addEventListener("click",function(){openHouse(btn.dataset.id);});
+    });
+    observe(index);
+  }
+
+  function portrait(m,accent,houseId){
+    return '<figure class="portrait reveal" style="--accent:'+esc(accent)+'">'+
+      '<div class="plate" style="'+plateVars(m.n)+'">'+
+        photoLayers(m.photo,m.n)+
+        (m.photo?'':'<span class="ghost">'+esc(initials(m.n))+'</span>')+
+        '<span class="vog">since ’'+esc(String(m.since).slice(2))+'</span>'+
+      '</div>'+
+      '<figcaption class="pcap">'+
+        '<span class="role '+esc(m.role)+'">'+esc(roleLabel(m.role))+'</span>'+
+        '<h4 class="pname">'+esc(m.n)+'</h4>'+
+        '<p class="pcredit">The category — <b>'+esc(m.cat)+'</b></p>'+
+        (m.mine?'<button class="mine-link" type="button" data-del-member="'+esc(m.id)+'" data-house="'+esc(houseId)+'">Remove — 내 등록</button>':'')+
+      '</figcaption>'+
+    '</figure>';
+  }
+
+  function openHouse(id){
+    var H=mergedHouses().filter(function(x){return x.id===id})[0];if(!H)return;
+    detail.style.setProperty("--accent",H.accent);
+    var mother=H.members.filter(function(m){return m.role==="mother"})[0];
+    var parents=H.members.filter(function(m){return m.role==="mother"||m.role==="father"});
+    var children=H.members.filter(function(m){return m.role!=="mother"&&m.role!=="father"});
+    detail.innerHTML=
+      '<button class="back" type="button" id="backBtn">← Back to the issue</button>'+
+      (H.mine?'<div class="manage">'+
+        '<button class="mine-link gold-link" type="button" data-edit-house="'+esc(H.id)+'">✎ Edit house</button>'+
+        '<button class="mine-link" type="button" data-del-house="'+esc(H.id)+'">Remove house</button>'+
+      '</div>':'')+
+      '<div class="spread-head">'+
+        '<div class="spread-title">'+
+          '<p class="est">'+esc(H.name[0])+' · '+esc(sceneOf(H.scene).label)+' scene'+(H.legendary?' · ★ Legendary':'')+(H.mine?' · yours':'')+'</p>'+
+          '<h2><em>'+esc(H.name[1])+'</em></h2>'+
+          '<p class="motto">"'+esc(H.motto)+'"</p>'+
+          '<div class="stats">'+
+            '<div class="stat"><div class="n">'+esc(H.founded)+'</div><div class="l">Founded</div></div>'+
+            '<div class="stat"><div class="n">'+H.members.length+'</div><div class="l">Members</div></div>'+
+            '<div class="stat"><div class="n">'+Math.max(0,1988-H.founded)+'</div><div class="l">Years walking</div></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="lead-plate plate" style="--accent:'+esc(H.accent)+';'+plateVars(H.id+"-lead")+'">'+
+          photoLayers(mother&&mother.photo,mother&&mother.n)+
+          (mother&&mother.photo?'':'<span class="ghost">'+esc(mother?initials(mother.n):H.name[1][0])+'</span>')+
+          (mother?'<span class="vog">Mother — '+esc(mother.n)+'</span>':'')+
+        '</div>'+
+      '</div>'+
+      (H.notes?'<p class="house-notes">'+esc(H.notes)+'</p>':'')+
+      '<p class="roster-label"><b>House Parents</b></p>'+
+      '<div class="roster parents-roster">'+parents.map(function(m){return portrait(m,H.accent,H.id)}).join("")+'</div>'+
+      '<p class="roster-label"><b>The Children</b></p>'+
+      '<div class="roster">'+(children.length?children.map(function(m){return portrait(m,H.accent,H.id)}).join(""):'<p class="empty">아직 등록된 children이 없어요 — 첫 번째가 되어보세요.</p>')+'</div>';
+    directory.style.display="none";
+    detail.classList.add("on");
+    document.getElementById("backBtn").addEventListener("click",closeHouse);
+    observe(detail);
+    window.scrollTo({top:0,behavior:"smooth"});
+    detail.querySelector(".back").focus();
+  }
+  function closeHouse(){
+    detail.classList.remove("on");detail.innerHTML="";directory.style.display="";
+    renderIndex();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  qInput.addEventListener("input",renderIndex);
+
+  // ================= REGISTRATION DESK =================
+  var CATS=["Face","Vogue Femme","Runway","Body","Performance","Bizarre","Realness","Butch Realness","Executive Realness","Femme Realness"];
+  var SWATCHES=["#D9A441","#D43E6E","#2FA39B","#9B7BD4","#7FA6C9","#C77B4E"];
+  var modal=document.getElementById("modal");
+  var mTabs=document.getElementById("mTabs");
+  var mForm=document.getElementById("mForm");
+  var mTitle=document.getElementById("mTitle");
+  var formState={kind:"house",editId:null};
+
+  document.getElementById("catList").innerHTML=CATS.map(function(c){return '<option value="'+c+'">'}).join("");
+
+  var KINDS=[
+    {id:"house", label:"New House",   title:'Found <em>a House</em>'},
+    {id:"member",label:"New member",  title:'Join <em>a House</em>'},
+    {id:"agent", label:"Walk as 007", title:'Walk <em>as 007</em>'}
+  ];
+  KINDS.forEach(function(k){
+    var b=document.createElement("button");
+    b.className="mtab";b.type="button";b.dataset.kind=k.id;b.textContent=k.label;
+    b.setAttribute("role","tab");
+    b.addEventListener("click",function(){renderForm(k.id,null);});
+    mTabs.appendChild(b);
+  });
+
+  function fld(label,inner,hint){
+    return '<div class="frow"><label class="flabel">'+label+'</label>'+inner+(hint?'<p class="fhint">'+hint+'</p>':'')+'</div>';
+  }
+  function txt(name,val,ph,extra){
+    return '<input class="finput" name="'+name+'" value="'+esc(val||"")+'" placeholder="'+esc(ph||"")+'"'+(extra||"")+'>';
+  }
+  function catInput(name,val){return txt(name,val,"Face, Vogue Femme, Runway…",' list="catList"');}
+  function photoField(name,label){
+    return '<div class="frow"><label class="flabel">'+(label||'Photo <b>(optional)</b>')+'</label>'+
+      '<div class="fphoto">'+
+        '<input type="file" accept="image/*" name="'+name+'" id="f_'+name+'" class="vh">'+
+        '<label class="fbtn" for="f_'+name+'">Choose a photo…</label>'+
+        '<img class="prev" id="p_'+name+'" alt="미리보기">'+
+      '</div>'+
+      '<p class="fhint">자동으로 흑백 + 하우스 컬러 듀오톤 처리돼요</p></div>';
+  }
+  function swatchRow(sel){
+    return '<div class="swatches">'+SWATCHES.map(function(c,i){
+      return '<label class="sw" style="--c:'+c+'"><input type="radio" name="accent" value="'+c+'"'+((sel?c===sel:i===0)?' checked':'')+'><span></span></label>';
+    }).join("")+'</div>';
+  }
+  function houseSelect(){
+    return '<select class="finput" name="houseId">'+mergedHouses().map(function(H){
+      return '<option value="'+esc(H.id)+'">'+esc(H.name.join(" "))+' — '+esc(sceneOf(H.scene).label)+'</option>';
+    }).join("")+'</select>';
+  }
+
+  var pendingPhotos={};
+
+  function renderForm(kind,editHouse){
+    formState.kind=kind;formState.editId=editHouse?editHouse.id:null;
+    pendingPhotos={};
+    Array.prototype.forEach.call(mTabs.children,function(b){b.setAttribute("aria-selected",b.dataset.kind===kind?"true":"false");});
+    var k=KINDS.filter(function(x){return x.id===kind})[0];
+    mTitle.innerHTML=editHouse?'Edit <em>'+esc(editHouse.name[1])+'</em>':k.title;
+    var h="";
+    if(kind==="house"){
+      var E=editHouse||{};
+      h+=fld("Scene",'<select class="finput" name="scene">'+["major","kiki","pier"].map(function(s){
+          return '<option value="'+s+'"'+((E.scene||"kiki")===s?' selected':'')+'>'+sceneOf(s).label+'</option>';}).join("")+'</select>',
+        "Major — 그랜드 프라이즈를 다투는 메이저 · Kiki — 젊은 커뮤니티 씬 · Pier — 부두에서 태어난 씬");
+      h+=fld('House of <b>—</b>',txt("hname",E.name?E.name[1]:"","Aurora, Mirage, Velour…",' required'),"하우스 이름만 — “House of”는 자동으로 붙어요");
+      h+=fld("Motto",txt("motto",E.motto,"We do not chase the light — we are the light."));
+      h+=fld("House colour",swatchRow(E.accent));
+      h+=fld("Founded",'<input class="finput" type="number" name="founded" min="1970" max="1988" value="'+esc(E.founded||1988)+'">');
+      if(!editHouse){
+        h+='<hr class="fsep" data-t="House Parents">';
+        h+='<div class="fgrid">'+
+          fld("Mother — name",txt("motherN","","Simone Aurora",' required'))+
+          fld("Mother — category",catInput("motherC",""))+
+        '</div>'+photoField("motherP","Mother — photo <b>(optional)</b>")+
+        '<div class="fgrid">'+
+          fld("Father — name <b>(optional)</b>",txt("fatherN","","Castor Aurora"))+
+          fld("Father — category",catInput("fatherC",""))+
+        '</div>'+photoField("fatherP","Father — photo <b>(optional)</b>");
+      }
+      h+='<button class="btn msubmit" type="submit"><span>'+(editHouse?"Save changes":"Found this House")+'</span></button>';
+    }else if(kind==="member"){
+      h+=fld("Which House",houseSelect());
+      h+=fld("Name",txt("mname","","Bijou Aurora",' required'),"children은 보통 하우스의 이름을 함께 써요 — “Bijou Aurora”처럼");
+      h+=fld("Role",'<select class="finput" name="role"><option value="child">Child</option><option value="legend">Legendary</option></select>');
+      h+='<div class="fgrid">'+fld("The category",catInput("mcat",""))+
+        fld("Walking since",'<input class="finput" type="number" name="since" min="1970" max="1988" value="1988">')+'</div>';
+      h+=photoField("mphoto");
+      h+='<button class="btn msubmit" type="submit"><span>Join the House</span></button>';
+    }else{
+      h+=fld("Name",txt("aname","","Remy 007",' required'),"007은 이름 뒤에 번호를 함께 써요 — “Remy 007”처럼");
+      h+='<div class="fgrid">'+fld("The category",catInput("acat",""))+
+        fld("Walking since",'<input class="finput" type="number" name="since" min="1970" max="1988" value="1988">')+'</div>';
+      h+=fld("Status",'<select class="finput" name="note"><option>Seeking a house</option><option>Walking solo</option><option>Between houses</option></select>');
+      h+=photoField("aphoto");
+      h+='<button class="btn msubmit" type="submit"><span>Walk as 007</span></button>';
+    }
+    mForm.innerHTML=h;
+    var first=mForm.querySelector("input,select");if(first)first.focus();
+  }
+
+  function openModal(kind,editHouse){
+    renderForm(kind,editHouse||null);
+    modal.hidden=false;
+    document.body.style.overflow="hidden";
+  }
+  function closeModal(){
+    modal.hidden=true;
+    document.body.style.overflow="";
+  }
+  modal.addEventListener("click",function(e){
+    if(e.target.closest("[data-close]")||e.target.classList.contains("modal-back"))closeModal();
+  });
+  mForm.addEventListener("change",function(e){
+    var t=e.target;
+    if(t.type!=="file"||!t.files||!t.files[0])return;
+    processPhoto(t.files[0],function(data){
+      if(!data){alert("이미지를 읽지 못했어요 — 다른 파일로 시도해주세요.");return;}
+      pendingPhotos[t.name]=data;
+      var p=document.getElementById("p_"+t.name);
+      if(p){p.src=data;p.classList.add("on");}
+    });
+  });
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)closeModal();});
+
+  function flash(sel){
+    var el=index.querySelector(sel);
+    if(!el)return;
+    el.classList.add("in","flash");
+    el.scrollIntoView({behavior:"smooth",block:"center"});
+  }
+
+  mForm.addEventListener("submit",function(e){
+    e.preventDefault();
+    var d=new FormData(mForm);
+    function v(n){return (d.get(n)||"").toString().trim();}
+    if(formState.kind==="house"){
+      if(!v("hname"))return;
+      if(formState.editId){
+        var ex=store.houses.filter(function(h){return h.id===formState.editId})[0];
+        if(ex){
+          ex.scene=v("scene");ex.name=["House of",v("hname")];ex.motto=v("motto");
+          ex.accent=v("accent")||ex.accent;ex.founded=+v("founded")||ex.founded;
+        }
+        saveStore();buildTabs();closeModal();
+        openHouse(formState.editId);
+        return;
+      }
+      if(!v("motherN"))return;
+      var hid=newId(),founded=+v("founded")||1988;
+      var members=[{id:newId(),n:v("motherN"),role:"mother",cat:v("motherC")||"Face",since:founded,mine:true,photo:pendingPhotos.motherP||null}];
+      if(v("fatherN"))members.push({id:newId(),n:v("fatherN"),role:"father",cat:v("fatherC")||"Realness",since:founded,mine:true,photo:pendingPhotos.fatherP||null});
+      store.houses.push({
+        id:hid,scene:v("scene"),name:["House of",v("hname")],accent:v("accent")||SWATCHES[0],
+        founded:founded,legendary:false,motto:v("motto")||"The category is family.",notes:"",mine:true,members:members
+      });
+      saveStore();buildTabs();closeModal();
+      currentScene=v("scene");syncTabs();renderIndex();
+      flash('[data-id="'+hid+'"]');
+    }else if(formState.kind==="member"){
+      if(!v("mname"))return;
+      var houseId=v("houseId");
+      var m={id:newId(),n:v("mname"),role:v("role")||"child",cat:v("mcat")||"Face",since:+v("since")||1988,mine:true,photo:pendingPhotos.mphoto||null};
+      var custom=store.houses.filter(function(h){return h.id===houseId})[0];
+      if(custom)custom.members.push(m);
+      else{(store.members[houseId]=store.members[houseId]||[]).push(m);}
+      saveStore();buildTabs();closeModal();
+      openHouse(houseId);
+    }else{
+      if(!v("aname"))return;
+      var aid=newId();
+      store.agents.push({id:aid,n:v("aname"),cat:v("acat")||"Face",since:+v("since")||1988,note:v("note")||"Seeking a house",mine:true,photo:pendingPhotos.aphoto||null});
+      saveStore();buildTabs();closeModal();
+      currentScene="007";syncTabs();renderIndex();
+      flash('[data-agent-id="'+aid+'"]');
+    }
+  });
+
+  // delete / edit delegation
+  index.addEventListener("click",function(e){
+    var del=e.target.closest("[data-del-agent]");
+    if(del){
+      e.stopPropagation();
+      if(confirm("이 007 등록을 삭제할까요?")){
+        store.agents=store.agents.filter(function(a){return a.id!==del.dataset.delAgent});
+        saveStore();buildTabs();renderIndex();
+      }
+    }
+  });
+  detail.addEventListener("click",function(e){
+    var t;
+    if((t=e.target.closest("[data-del-member]"))){
+      if(!confirm("이 구성원을 삭제할까요?"))return;
+      var hid=t.dataset.house,mid=t.dataset.delMember;
+      var custom=store.houses.filter(function(h){return h.id===hid})[0];
+      if(custom)custom.members=custom.members.filter(function(m){return m.id!==mid});
+      else if(store.members[hid])store.members[hid]=store.members[hid].filter(function(m){return m.id!==mid});
+      saveStore();buildTabs();openHouse(hid);
+    }else if((t=e.target.closest("[data-edit-house]"))){
+      var H=store.houses.filter(function(h){return h.id===t.dataset.editHouse})[0];
+      if(H)openModal("house",H);
+    }else if((t=e.target.closest("[data-del-house]"))){
+      if(!confirm("이 하우스를 통째로 삭제할까요? 구성원도 함께 사라져요."))return;
+      store.houses=store.houses.filter(function(h){return h.id!==t.dataset.delHouse});
+      saveStore();buildTabs();closeHouse();
+    }
+  });
+
+  document.getElementById("addBtn").addEventListener("click",function(){openModal("house");});
+
+  buildTabs();
+  renderIndex();
+})();
+</script>
+</body>
+</html>
