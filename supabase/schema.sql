@@ -93,3 +93,19 @@ create policy "delete own agents" on public.agents for delete
 -- 고정 문자열 id)에도 걸릴 수 있어서 uuid FK 대신 text로 둡니다.
 alter table public.members drop constraint members_house_id_fkey;
 alter table public.members alter column house_id type text;
+
+-- ── 35개 큐레이션 하우스를 실제 데이터로 옮기기 위한 준비 ──
+-- is_curated=true인 행은 owner_token 없이도(누구나) 수정 가능하게 정책을 바꿈.
+-- 단, 삭제는 여전히 owner_token이 필요해서 큐레이션 데이터가 통째로
+-- 삭제될 일은 없음 (큐레이션 행의 owner_token은 아무도 모르는 랜덤값이라
+-- 애초에 일치시킬 수 없음).
+alter table public.houses add column is_curated boolean not null default false;
+alter table public.members add column is_curated boolean not null default false;
+
+drop policy "update own houses" on public.houses;
+create policy "update houses" on public.houses for update
+  using (is_curated or owner_token = nullif(current_setting('request.headers', true)::json->>'x-owner-token','')::uuid);
+
+drop policy "update own members" on public.members;
+create policy "update members" on public.members for update
+  using (is_curated or owner_token = nullif(current_setting('request.headers', true)::json->>'x-owner-token','')::uuid);
