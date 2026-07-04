@@ -397,13 +397,17 @@
   .plate.flipped .flip-hint{opacity:0}
   .plate-back{
     position:absolute;inset:0;z-index:4;
-    display:flex;flex-direction:column;justify-content:center;
-    padding:24px 21px;text-align:left;overflow:auto;
+    display:flex;flex-direction:column;
+    justify-content:flex-start;   /* 폴백: 긴 소개는 위에서부터 스크롤 (안 잘림) */
+    justify-content:safe center;  /* 지원 브라우저: 짧으면 가운데, 길면 위 정렬 후 스크롤 */
+    padding:24px 21px;text-align:left;overflow-y:auto;
     background:linear-gradient(158deg,color-mix(in srgb,var(--accent) 32%,#0b0508),#0b0508 80%);
     color:var(--paper);font-size:.85rem;line-height:1.72;white-space:pre-line;
     opacity:0;pointer-events:none;transform:scale(1.05);
     transition:opacity .42s ease,transform .42s cubic-bezier(.2,.7,.2,1);
   }
+  /* 뒷면이 켜지면 앞면 배지들은 숨겨 깔끔하게 (혹시 모를 가장자리 겹침 방지) */
+  .plate.flipped .tag,.plate.flipped .vog,.plate.flipped .folio{opacity:0;transition:opacity .3s}
   .plate.flipped .plate-back{opacity:1;pointer-events:auto;transform:none}
   .plate-back .bl{
     font-family:var(--deco);text-transform:uppercase;letter-spacing:.2em;
