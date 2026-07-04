@@ -646,6 +646,7 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════════════
    여기서부터 JavaScript — 사이트의 "데이터"와 "동작"을 담당해요.
@@ -653,6 +654,15 @@
    ═══════════════════════════════════════════════════════════ */
 (function(){   // ← 코드 전체를 감싸는 껍데기 (변수가 밖으로 새지 않게)
   "use strict";   // 엄격 모드 — 실수를 빨리 잡아주는 안전장치
+
+  /* ─────────────────────────────────────────────
+     ★ Supabase — 공유 데이터베이스 연결
+     anon(publishable) 키는 클라이언트에 노출돼도 되는 키예요.
+     실제 접근 제어는 Supabase 쪽 RLS 정책이 담당합니다.
+     ───────────────────────────────────────────── */
+  var SUPABASE_URL="https://cgzlvwnyantlnlkommev.supabase.co";
+  var SUPABASE_KEY="sb_publishable_SvtiZzgEmzEpN7oAQd-0ZQ_bw3f2WQg";
+  var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
   /* ─────────────────────────────────────────────
      ★ 씬 목록 — 탭과 섹션 구성이 여기서 나와요
@@ -913,31 +923,73 @@
   var AGENTS=[];
 
   /* ═════════════════════════════════════════════
-     방문자 등록 저장소 — 등록 폼으로 입력된 하우스/멤버/007을
-     "브라우저의 localStorage"에 저장하고 불러오는 부분.
-     ※ localStorage = 각자 브라우저 안의 개인 저장 공간.
-       그래서 등록 내용이 본인에게만 보여요. (서버를 붙이면 해결)
+     방문자 등록 저장소 — 등록 폼으로 입력된 하우스/멤버/007은
+     이제 Supabase(공유 DB)에 저장돼서 모든 방문자에게 보여요.
+     시드(35개 큐레이션) 하우스에 대한 수정만 예외적으로 이 브라우저의
+     localStorage에 남아요 — 시드는 코드에 박힌 고정 데이터라
+     "진짜로 고치는" 게 아니라 "내 화면에서만 덮어쓰는" 개념이라서예요.
      ═════════════════════════════════════════════ */
-  var KEY="grandhall.reg.v1";
-  function loadStore(){
+  var SEED_KEY="grandhall.seedEdits.v1";
+  function loadSeedEdits(){
     try{
-      var s=JSON.parse(localStorage.getItem(KEY));
-      if(s&&s.houses&&s.members&&s.agents){
-        s.houseEdits=s.houseEdits||{};   // 시드 하우스에 대한 수정사항
-        s.memberEdits=s.memberEdits||{}; // 시드 멤버에 대한 수정/삭제
-        return s;
-      }
+      var s=JSON.parse(localStorage.getItem(SEED_KEY));
+      if(s)return {houseEdits:s.houseEdits||{},memberEdits:s.memberEdits||{}};
     }catch(e){}
-    return {houses:[],members:{},agents:[],houseEdits:{},memberEdits:{}};
+    return {houseEdits:{},memberEdits:{}};
   }
-  var store=loadStore();
-  function saveStore(){
-    try{localStorage.setItem(KEY,JSON.stringify(store))}
-    catch(e){alert("브라우저 저장 공간이 가득 찼어요 — 사진이 있는 등록을 몇 개 삭제한 뒤 다시 시도해주세요.")}
+  var store=Object.assign({houses:[],members:{},agents:[]},loadSeedEdits());
+  function saveSeedEdits(){
+    try{localStorage.setItem(SEED_KEY,JSON.stringify({houseEdits:store.houseEdits,memberEdits:store.memberEdits}));}
+    catch(e){}
   }
+
+  /* 내가 등록한 항목의 owner_token — 수정·삭제 요청 때 x-owner-token
+     헤더로 실어보내는 "내 것" 증명. 이 브라우저에만 저장돼요. */
+  var TOKENS_KEY="grandhall.tokens.v1";
+  function loadTokens(){try{return JSON.parse(localStorage.getItem(TOKENS_KEY))||{};}catch(e){return {};}}
+  var myTokens=loadTokens();
+  function rememberToken(id,token){myTokens[id]=token;try{localStorage.setItem(TOKENS_KEY,JSON.stringify(myTokens));}catch(e){}}
+  function forgetToken(id){delete myTokens[id];try{localStorage.setItem(TOKENS_KEY,JSON.stringify(myTokens));}catch(e){}}
+  function ownsToken(id){return !!myTokens[id];}
+
+  /* Supabase REST 호출 도우미
+     - sbGet/sbInsert : 보통 anon 권한으로 충분
+     - sbUpdate/sbDelete : x-owner-token 헤더가 RLS 정책과 대조돼서
+       실제로 내가 등록한 행만 고치거나 지울 수 있어요 */
+  function sbRequest(method,path,opts){
+    opts=opts||{};
+    var headers={
+      "apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,
+      "Content-Type":"application/json"
+    };
+    if(opts.token)headers["x-owner-token"]=opts.token;
+    if(opts.prefer)headers["Prefer"]=opts.prefer;
+    return fetch(SUPABASE_URL+"/rest/v1/"+path,{
+      method:method,headers:headers,
+      body:opts.body?JSON.stringify(opts.body):undefined
+    }).then(function(r){
+      if(!r.ok)return r.json().catch(function(){return {};}).then(function(e){throw new Error(e.message||r.statusText);});
+      return r.status===204?null:r.json();
+    });
+  }
+  function sbGet(table,query){return sbRequest("GET",table+"?"+(query||"select=*"));}
+  function sbInsert(table,row){return sbRequest("POST",table,{body:row,prefer:"return=representation"}).then(function(rows){return rows[0];});}
+  function sbUpdate(table,id,fields,token){return sbRequest("PATCH",table+"?id=eq."+id,{body:fields,token:token,prefer:"return=representation"}).then(function(rows){
+    if(!rows||!rows.length)throw new Error("본인이 등록한 항목만 수정할 수 있어요.");
+    return rows[0];
+  });}
+  function sbDelete(table,id,token){return sbRequest("DELETE",table+"?id=eq."+id,{token:token,prefer:"return=representation"}).then(function(rows){
+    if(!rows||!rows.length)throw new Error("본인이 등록한 항목만 삭제할 수 있어요.");
+    return rows[0];
+  });}
+
   function newId(){return "u"+Date.now().toString(36)+Math.floor(Math.random()*46656).toString(36)}
   /* 시드 멤버 식별키: "하우스id#이름" — 수정/삭제 내역을 이 키로 저장 */
   function mKey(hid,n){return hid+"#"+n;}
+  /* id가 코드에 박힌 시드(큐레이션) 하우스인지 — Supabase 행이 아니라
+     로컬 오버레이(houseEdits)로만 "수정"되는 대상인지 판단할 때 씀 */
+  function isSeedHouse(id){return HOUSES.some(function(h){return h.id===id;});}
+  function tokenFor(id){return myTokens[id];}
   function mergedHouses(){
     return HOUSES.map(function(H){
       var he=store.houseEdits[H.id];
@@ -956,6 +1008,40 @@
     }).concat(store.houses);
   }
   function mergedAgents(){return AGENTS.concat(store.agents)}
+
+  /* Supabase 행 ↔ 화면이 쓰는 JS 모양 변환 */
+  function rowToHouse(r){
+    return {id:r.id,scene:r.scene,pierType:r.pier_type,name:[r.prefix,r.name],sym:r.sym,
+      accent:r.accent,motto:r.motto,chant:r.chant,notes:r.notes,founded:r.founded,chapter:r.chapter,
+      photo:r.photo_url,legendary:r.legendary,mine:ownsToken(r.id),members:[]};
+  }
+  function rowToMember(r){
+    return {id:r.id,n:r.name,role:r.role,t:r.role_custom,honor:r.honor,cat:r.category,
+      since:r.since,bio:r.bio,photo:r.photo_url,mine:ownsToken(r.id)};
+  }
+  function rowToAgent(r){
+    return {id:r.id,n:r.name,honor:r.honor,cat:r.category,since:r.since,note:r.note,
+      bio:r.bio,photo:r.photo_url,mine:ownsToken(r.id)};
+  }
+
+  /* 등록 화면 전체를 Supabase에서 다시 읽어와 store에 채우고 다시 그림.
+     방문자가 등록/수정/삭제할 때마다 이걸 다시 불러서 모두에게 최신 상태를 보여줘요. */
+  function refreshFromSupabase(){
+    return Promise.all([sbGet("houses"),sbGet("members"),sbGet("agents")]).then(function(res){
+      var houseRows=res[0],memberRows=res[1],agentRows=res[2];
+      var houses=houseRows.map(rowToHouse);
+      var byId={};houses.forEach(function(h){byId[h.id]=h;});
+      var seedBucket={};
+      memberRows.forEach(function(r){
+        var m=rowToMember(r);
+        if(byId[r.house_id])byId[r.house_id].members.push(m);
+        else(seedBucket[r.house_id]=seedBucket[r.house_id]||[]).push(m);
+      });
+      store.houses=houses;
+      store.members=seedBucket;
+      store.agents=agentRows.map(rowToAgent);
+    });
+  }
   function esc(s){
     return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
   }
@@ -975,6 +1061,25 @@
     };
     img.onerror=function(){URL.revokeObjectURL(url);cb(null);};
     img.src=url;
+  }
+  /* 압축된 dataURL 사진을 Supabase Storage(photos 버킷)에 올리고
+     공개 URL을 돌려줌 — 등록 제출 시점에 호출 */
+  function dataURLtoBlob(dataURL){
+    var parts=dataURL.split(","),mime=parts[0].match(/:(.*?);/)[1],bin=atob(parts[1]);
+    var arr=new Uint8Array(bin.length);
+    for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+    return new Blob([arr],{type:mime});
+  }
+  function uploadPhoto(dataURL){
+    var path=newId()+".jpg";
+    return fetch(SUPABASE_URL+"/storage/v1/object/photos/"+path,{
+      method:"POST",
+      headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"image/jpeg"},
+      body:dataURLtoBlob(dataURL)
+    }).then(function(r){
+      if(!r.ok)throw new Error("사진 업로드에 실패했어요");
+      return SUPABASE_URL+"/storage/v1/object/public/photos/"+path;
+    });
   }
   function photoLayers(p,alt){
     return p?'<img class="photo" src="'+p+'" alt="'+esc(alt||"")+'"><span class="tint"></span><span class="shade"></span>':'';
@@ -1225,7 +1330,7 @@
     detail.innerHTML=
       '<button class="back" type="button" id="backBtn">← Back to the issue</button>'+
       '<div class="manage">'+
-        '<button class="mine-link gold-link" type="button" data-edit-house="'+esc(H.id)+'">✎ Edit house</button>'+
+        ((H.mine||isSeedHouse(H.id))?'<button class="mine-link gold-link" type="button" data-edit-house="'+esc(H.id)+'">✎ Edit house</button>':'')+
         (H.mine?'<button class="mine-link" type="button" data-del-house="'+esc(H.id)+'">Remove house</button>':'')+
       '</div>'+
       '<div class="spread-head">'+
@@ -1351,7 +1456,6 @@
   function renderForm(kind,editHouse,editMember){
     formState.kind=kind;
     formState.editId=editHouse?editHouse.id:null;
-    formState.editSeed=!!(editHouse&&!editHouse.mine);   // 시드 하우스 수정 여부
     formState.editMember=editMember||null;
     pendingPhotos={};
     Array.prototype.forEach.call(mTabs.children,function(b){b.setAttribute("aria-selected",b.dataset.kind===kind?"true":"false");});
@@ -1492,87 +1596,132 @@
     function v(n){return (d.get(n)||"").toString().trim();}
     /* 색: 6색 라디오 중 선택된 것 > 스펙트럼에서 고른 색 */
     function accentVal(){return v("accent")||v("accentPick")||SWATCHES[0];}
+    var submitBtn=mForm.querySelector(".msubmit");
+    function busy(b){if(submitBtn){submitBtn.disabled=b;submitBtn.style.opacity=b?".55":"";}}
+    function withPhoto(field){return pendingPhotos[field]?uploadPhoto(pendingPhotos[field]):Promise.resolve(null);}
+    function fail(err){busy(false);alert("저장에 실패했어요 — "+(err&&err.message||"알 수 없는 오류")+"\n네트워크 상태를 확인하고 다시 시도해주세요.");}
 
     if(formState.kind==="house"){
       if(!v("hname"))return;
-      var fields={
-        scene:v("scene"),name:[v("hprefix")||"House of",v("hname")],
-        motto:v("motto"),chant:v("chant"),notes:v("hnotes"),
-        accent:accentVal(),founded:+v("founded")||2026,
-        chapter:+v("chapter")||null,   // 비워두면 표시 안 함 (한국 태생 하우스)
-        pierType:v("scene")==="pier"?(v("pierType")||"Pier House"):null
-      };
-      if(pendingPhotos.hphoto)fields.photo=pendingPhotos.hphoto;
+      var pierType=v("scene")==="pier"?(v("pierType")||"Pier House"):null;
 
-      if(formState.editId){
-        if(formState.editSeed){
-          /* 시드 하우스 수정 → 원본은 두고 수정사항만 저장 */
-          store.houseEdits[formState.editId]=Object.assign(store.houseEdits[formState.editId]||{},fields);
-        }else{
-          var ex=store.houses.filter(function(h){return h.id===formState.editId})[0];
-          if(ex)Object.assign(ex,fields);
-        }
-        saveStore();buildTabs();closeModal();
-        openHouse(formState.editId);
+      /* 시드(큐레이션) 하우스 수정 — Supabase 행이 아니라 로컬 오버레이 */
+      if(formState.editId&&isSeedHouse(formState.editId)){
+        var seedFields={
+          scene:v("scene"),name:[v("hprefix")||"House of",v("hname")],
+          motto:v("motto"),chant:v("chant"),notes:v("hnotes"),
+          accent:accentVal(),founded:+v("founded")||2026,
+          chapter:+v("chapter")||null,pierType:pierType
+        };
+        busy(true);
+        withPhoto("hphoto").then(function(url){
+          if(url)seedFields.photo=url;
+          store.houseEdits[formState.editId]=Object.assign(store.houseEdits[formState.editId]||{},seedFields);
+          saveSeedEdits();buildTabs();closeModal();openHouse(formState.editId);busy(false);
+        }).catch(fail);
         return;
       }
-      var hid=newId();
-      store.houses.push(Object.assign({id:hid,legendary:false,mine:true,members:[],photo:pendingPhotos.hphoto||null},fields));
-      saveStore();buildTabs();closeModal();
-      currentScene=fields.scene;syncTabs();renderIndex();
-      flash('[data-id="'+hid+'"]');
+
+      /* 새 하우스 등록 / 내가 등록한 하우스 수정 — Supabase */
+      var dbFields={
+        scene:v("scene"),pier_type:pierType,
+        prefix:v("hprefix")||"House of",name:v("hname"),
+        motto:v("motto")||null,chant:v("chant")||null,notes:v("hnotes")||null,
+        accent:accentVal(),founded:+v("founded")||2026,chapter:+v("chapter")||null
+      };
+      busy(true);
+      withPhoto("hphoto").then(function(url){
+        if(url)dbFields.photo_url=url;
+        if(formState.editId){
+          return sbUpdate("houses",formState.editId,dbFields,tokenFor(formState.editId)).then(function(){
+            return refreshFromSupabase();
+          }).then(function(){
+            buildTabs();closeModal();openHouse(formState.editId);
+          });
+        }
+        return sbInsert("houses",dbFields).then(function(row){
+          rememberToken(row.id,row.owner_token);
+          return refreshFromSupabase().then(function(){
+            buildTabs();closeModal();
+            currentScene=dbFields.scene;syncTabs();renderIndex();
+            flash('[data-id="'+row.id+'"]');
+          });
+        });
+      }).then(function(){busy(false);}).catch(fail);
 
     }else if(formState.kind==="member"){
       if(!v("mname"))return;
       /* Role: 표준 선택 → 배지로 표시 / "기타" → 직접 입력한 직함이 배지가 됨.
          표준 role을 유지한 채 다른 항목만 수정하면 기존 직함(t)은 보존 */
-      var roleSel=v("role")||"child";
-      var fieldsM={
-        n:v("mname"),honor:v("mhonor")||null,
-        cat:v("mcat")||"",since:+v("since")||2026,bio:v("mbio")||null
-      };
-      if(roleSel==="custom"){
-        fieldsM.role="custom";fieldsM.t=v("roleCustom")||"Member";
-      }else{
-        fieldsM.role=roleSel;
+      var roleSel=v("role")||"child",roleT=null;
+      if(roleSel==="custom"){roleT=v("roleCustom")||"Member";}
+      else{
         var orig=formState.editMember&&formState.editMember.m;
-        fieldsM.t=(orig&&orig.role===roleSel)?(orig.t||null):null;
+        roleT=(orig&&orig.role===roleSel)?(orig.t||null):null;
       }
-      if(pendingPhotos.mphoto)fieldsM.photo=pendingPhotos.mphoto;
 
       if(formState.editMember){
         var em=formState.editMember;
+        /* 시드 멤버 수정 — 로컬 오버레이 */
         if(em.ref.indexOf("#")>-1){
-          /* 시드 멤버 수정 → 수정사항만 저장 */
-          store.memberEdits[em.ref]=Object.assign(store.memberEdits[em.ref]||{},fieldsM);
-        }else{
-          /* 내가 등록한 멤버 → 직접 수정 */
-          var lists=[];
-          var ch=store.houses.filter(function(h){return h.id===em.houseId})[0];
-          if(ch)lists.push(ch.members);
-          if(store.members[em.houseId])lists.push(store.members[em.houseId]);
-          lists.forEach(function(L){L.forEach(function(m){if(m.id===em.ref)Object.assign(m,fieldsM);});});
+          var fieldsM={n:v("mname"),honor:v("mhonor")||null,role:roleSel,t:roleT,
+            cat:v("mcat")||"",since:+v("since")||2026,bio:v("mbio")||null};
+          busy(true);
+          withPhoto("mphoto").then(function(url){
+            if(url)fieldsM.photo=url;
+            store.memberEdits[em.ref]=Object.assign(store.memberEdits[em.ref]||{},fieldsM);
+            saveSeedEdits();buildTabs();closeModal();openHouse(em.houseId);busy(false);
+          }).catch(fail);
+          return;
         }
-        saveStore();buildTabs();closeModal();
-        openHouse(em.houseId);
+        /* 내가 등록한 멤버 수정 — Supabase */
+        var dbFieldsM={name:v("mname"),honor:v("mhonor")||null,role:roleSel,role_custom:roleT,
+          category:v("mcat")||"",since:+v("since")||2026,bio:v("mbio")||null};
+        busy(true);
+        withPhoto("mphoto").then(function(url){
+          if(url)dbFieldsM.photo_url=url;
+          return sbUpdate("members",em.ref,dbFieldsM,tokenFor(em.ref));
+        }).then(function(){
+          return refreshFromSupabase();
+        }).then(function(){
+          buildTabs();closeModal();openHouse(em.houseId);busy(false);
+        }).catch(fail);
         return;
       }
+
       var houseId=v("houseId");
       if(!houseId){alert("하우스를 선택해주세요 — 이 씬에 하우스가 없다면 먼저 New House로 만들어주세요.");return;}
-      var m=Object.assign({id:newId(),mine:true,photo:pendingPhotos.mphoto||null},fieldsM);
-      var custom=store.houses.filter(function(h){return h.id===houseId})[0];
-      if(custom)custom.members.push(m);
-      else{(store.members[houseId]=store.members[houseId]||[]).push(m);}
-      saveStore();buildTabs();closeModal();
-      openHouse(houseId);
+      var newFieldsM={house_id:houseId,name:v("mname"),honor:v("mhonor")||null,role:roleSel,role_custom:roleT,
+        category:v("mcat")||"",since:+v("since")||2026,bio:v("mbio")||null};
+      busy(true);
+      withPhoto("mphoto").then(function(url){
+        if(url)newFieldsM.photo_url=url;
+        return sbInsert("members",newFieldsM);
+      }).then(function(row){
+        rememberToken(row.id,row.owner_token);
+        return refreshFromSupabase();
+      }).then(function(){
+        buildTabs();closeModal();openHouse(houseId);busy(false);
+      }).catch(fail);
 
     }else{
       if(!v("aname"))return;
-      var aid=newId();
-      store.agents.push({id:aid,n:v("aname"),honor:v("ahonor")||null,cat:v("acat")||"Face",since:+v("since")||2026,note:v("note")||"Seeking a house",bio:v("abio")||null,mine:true,photo:pendingPhotos.aphoto||null});
-      saveStore();buildTabs();closeModal();
-      currentScene="007";syncTabs();renderIndex();
-      flash('[data-agent-id="'+aid+'"]');
+      var agentFields={name:v("aname"),honor:v("ahonor")||null,category:v("acat")||"Face",
+        since:+v("since")||2026,note:v("note")||"Seeking a house",bio:v("abio")||null};
+      busy(true);
+      var newAgentId;
+      withPhoto("aphoto").then(function(url){
+        if(url)agentFields.photo_url=url;
+        return sbInsert("agents",agentFields);
+      }).then(function(row){
+        newAgentId=row.id;
+        rememberToken(row.id,row.owner_token);
+        return refreshFromSupabase();
+      }).then(function(){
+        buildTabs();closeModal();
+        currentScene="007";syncTabs();renderIndex();
+        flash('[data-agent-id="'+newAgentId+'"]');busy(false);
+      }).catch(fail);
     }
   });
 
@@ -1591,8 +1740,13 @@
     if(del){
       e.stopPropagation();
       if(confirm("이 007 등록을 삭제할까요?")){
-        store.agents=store.agents.filter(function(a){return a.id!==del.dataset.delAgent});
-        saveStore();buildTabs();renderIndex();
+        var aid=del.dataset.delAgent;
+        sbDelete("agents",aid,tokenFor(aid)).then(function(){
+          forgetToken(aid);
+          return refreshFromSupabase();
+        }).then(function(){
+          buildTabs();renderIndex();
+        }).catch(function(err){alert("삭제에 실패했어요 — "+err.message);});
       }
     }
   });
@@ -1609,28 +1763,32 @@
       var m1=H1.members.filter(function(x){return (x.id||x._k)===ref1})[0];if(!m1)return;
       openModal("member",null,{houseId:hid1,ref:ref1,m:m1});
     }else if((t=e.target.closest("[data-del-member]"))){
-      if(!confirm("이 구성원을 삭제할까요? (이 브라우저에서만 적용돼요)"))return;
+      if(!confirm("이 구성원을 삭제할까요?"))return;
       var hid=t.dataset.house,ref=t.dataset.delMember;
       if(ref.indexOf("#")>-1){
-        store.memberEdits[ref]={deleted:true};    // 시드 멤버 → 숨김 처리
+        store.memberEdits[ref]={deleted:true};    // 시드 멤버 → 숨김 처리 (로컬)
+        saveSeedEdits();buildTabs();openHouse(hid);
       }else{
-        var custom=store.houses.filter(function(h){return h.id===hid})[0];
-        if(custom)custom.members=custom.members.filter(function(m){return m.id!==ref});
-        else if(store.members[hid])store.members[hid]=store.members[hid].filter(function(m){return m.id!==ref});
+        sbDelete("members",ref,tokenFor(ref)).then(function(){
+          forgetToken(ref);
+          return refreshFromSupabase();
+        }).then(function(){
+          buildTabs();openHouse(hid);
+        }).catch(function(err){alert("삭제에 실패했어요 — "+err.message);});
       }
-      saveStore();buildTabs();openHouse(hid);
     }else if((t=e.target.closest("[data-edit-house]"))){
       var hid2=t.dataset.editHouse;
-      var custom2=store.houses.filter(function(h){return h.id===hid2})[0];
-      if(custom2)openModal("house",custom2);
-      else{
-        var mh=mergedHouses().filter(function(x){return x.id===hid2})[0];
-        if(mh)openModal("house",mh);   // mine이 아니므로 editSeed 경로로 저장됨
-      }
+      var mh=mergedHouses().filter(function(x){return x.id===hid2})[0];
+      if(mh)openModal("house",mh);   // 시드 하우스면 제출 시 로컬 오버레이로 저장됨
     }else if((t=e.target.closest("[data-del-house]"))){
       if(!confirm("이 하우스를 통째로 삭제할까요? 구성원도 함께 사라져요."))return;
-      store.houses=store.houses.filter(function(h){return h.id!==t.dataset.delHouse});
-      saveStore();buildTabs();closeHouse();
+      var delHid=t.dataset.delHouse;
+      sbDelete("houses",delHid,tokenFor(delHid)).then(function(){
+        forgetToken(delHid);
+        return refreshFromSupabase();
+      }).then(function(){
+        buildTabs();closeHouse();
+      }).catch(function(err){alert("삭제에 실패했어요 — "+err.message);});
     }
   });
 
@@ -1643,9 +1801,15 @@
     window.scrollTo({top:0,behavior:"smooth"});
   });
 
-  /* ── 시작! 페이지가 열리면 탭과 명부를 처음으로 그림 ── */
+  /* ── 시작! 페이지가 열리면 우선 시드 데이터로 그린 뒤,
+     Supabase에서 방문자 등록 데이터를 불러와 다시 그림 ── */
   buildTabs();
   renderIndex();
+  refreshFromSupabase().catch(function(err){
+    console.error("Supabase 연결 실패:",err);
+  }).then(function(){
+    buildTabs();renderIndex();
+  });
 })();
 </script>
 </body>
