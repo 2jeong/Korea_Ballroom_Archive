@@ -445,6 +445,25 @@
   .stat .n{font-family:var(--didone);font-size:2.1rem;color:var(--accent);line-height:1;font-variant-numeric:tabular-nums}
   .stat .l{font-family:var(--deco);text-transform:uppercase;letter-spacing:.2em;font-size:.56rem;color:var(--paper-dim);margin-top:6px}
 
+  /* 하우스 챈트 — 볼에서 외치는 고유 구호를 인용구처럼 강조 */
+  .house-chant{
+    margin:0 0 40px;padding:22px 26px;position:relative;
+    border-left:3px solid var(--accent);
+    background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 12%,transparent),transparent 80%);
+  }
+  .house-chant .clabel{
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.3em;
+    font-size:.56rem;color:var(--accent);margin:0 0 9px;
+  }
+  .house-chant q{
+    font-family:var(--didone);font-style:italic;font-size:clamp(1.3rem,3vw,1.9rem);
+    line-height:1.3;color:var(--gold-hi);quotes:"\201C" "\201D";display:block;
+  }
+  .scene-chant{
+    font-family:var(--didone);font-style:italic;font-size:1.1rem;color:var(--scene,var(--gold));
+    margin:8px 0 0;opacity:.9;
+  }
+
   .house-notes{
     columns:1;max-width:66ch;margin:0 0 50px;
     font-size:1.02rem;color:var(--paper-dim);line-height:1.75;
@@ -622,7 +641,7 @@
     {id:"all",  label:"All"},
     {id:"kiki", label:"Kiki",  color:"#D43E6E", ghost:"Kiki",  blurb:"국내에서 태어난 키키 하우스들 — 한국 볼룸씬의 심장."},
     {id:"major",label:"Major", color:"#D9A441", ghost:"Major", blurb:"아이코닉·인터내셔널 하우스들의 한국 챕터 — 메인스트림 씬."},
-    {id:"007",  label:"007",   color:"#F0D9B0", ghost:"007",   blurb:"하우스 없이 걷는 프리 에이전트 — 지금은 혼자, 곧 가족과."}
+    {id:"007",  label:"007",   color:"#F0D9B0", ghost:"007",   chant:"Double-O Double-O", blurb:"하우스 없이 걷는 프리 에이전트 — 지금은 혼자, 곧 가족과."}
   ];
 
     /* ═════════════════════════════════════════════
@@ -650,177 +669,212 @@
     /* ─────────── 키키 씬 (Kiki Scene) ─────────── */
     {id:"bodega",scene:"kiki",name:["The Legendary Elite House of","Bodega"],sym:"🅱️",accent:"#C77B4E",founded:2019,chapter:2025,
      motto:"2025년 5월 Hevil이 연 레전더리 하우스의 국내 챕터.",
+     chant:"Bode~ga~",
      notes:"2019년 파운딩 마더 Fuffy와 파운딩 오버롤 파더 Papi가 세운 레전더리 하우스. 국내 챕터는 2025년 5월 Hevil에 의해 열렸으며, 현재 국내 멤버는 Hevil이 유일하다.",
      members:[{n:"Hevil",role:"member",t:"멤버",since:2025}]},
 
     {id:"dior",scene:"kiki",name:["The International 3.5k Haus of","Christian Dior"],sym:"💎",accent:"#7FA6C9",founded:2017,chapter:2024,
      motto:"2024년 12월 Glozy가 연 인터내셔널 하우스의 국내 챕터.",
+     chant:"Get off my D~~ I-O-R",
      notes:"2017년 파운딩 마더 Octavia가 세운 인터내셔널 하우스로, 오버롤 마더 Amaya와 오버롤 파더 Fame이 있다. 국내 챕터는 2024년 12월 Glozy에 의해 열렸다.",
      members:[{n:"Tony",role:"member",t:"멤버",since:2024},{n:"Pyuri",role:"member",t:"멤버",since:2024},{n:"Musea",role:"member",t:"멤버",since:2024},{n:"On",role:"member",t:"멤버",since:2024},{n:"Liona",role:"member",t:"멤버",since:2024},{n:"Laurelline",role:"member",t:"멤버",since:2024}]},
 
     {id:"ivy",scene:"kiki",name:["The International House of","Ivy"],sym:"🧪",accent:"#2FA39B",founded:2024,chapter:2024,
      motto:"Seas에서 Ivy로 — 국내에서 태어나 중국까지 뻗은 하우스.",
+     chant:"I! V! Y! IVY-VY-VY-VY-VY",
      notes:"2024년 파운딩 마더 Shuu와 파운딩 파더 K가 세운 인터내셔널 하우스. House of Seas Kiki Ball 2024에서 하우스 이름을 Seas에서 Ivy로 바꾸었다. Welcome to Princess Kiki Ball 2025에서 Paris가 프린세스에서 마더로 승계했으며, 2024년 11월에는 중국 챕터가 열렸다.",
      members:[{n:"K",role:"father",t:"파운딩 파더",since:2024},{n:"Paris",role:"mother",t:"코리아 마더",since:2024},{n:"Lala",role:"child",t:"차일드",since:2024},{n:"Dia",role:"child",t:"차일드",since:2024},{n:"Belle",role:"child",t:"차일드",since:2024},{n:"Regina",role:"child",t:"차일드",since:2024},{n:"Rina",role:"child",t:"차일드",since:2024},{n:"Joon",role:"child",t:"차일드",since:2024},{n:"Lex",role:"child",t:"차일드",since:2024},{n:"AleXa",role:"child",t:"차일드",since:2024},{n:"Younglong",role:"child",t:"차일드",since:2024}]},
 
     {id:"huamulan",scene:"kiki",name:["The Legendary Haus of","Hua Mulan"],sym:"💮",accent:"#E06A8F",founded:2014,chapter:2023,
      motto:"2023년 12월 Juju와 Simbaa가 연 레전더리 하우스의 국내 챕터.",
+     chant:"M! U! LA! N! Mulan~!",
      notes:"2014년 Terra가 세운 레전더리 하우스로, 오버롤 파더 Kadon이 있다. 국내 챕터는 2023년 12월 Juju와 Simbaa에 의해 열렸으며, 현재 국내 리더십으로는 코리아 마더 Juju가 있다.",
      members:[{n:"Juju",role:"mother",t:"코리아 마더",since:2023}]},
 
     {id:"juicy",scene:"kiki",name:["The Iconic Hall of Fame House of","Juicy Couture"],sym:"🧃",accent:"#E8A33D",founded:2009,chapter:2023,
      motto:"HBO Legendary Max S3 우승 하우스의 국내 챕터.",
+     chant:"Juicy~ (Motherfucking!)",
      notes:"2009년 파운딩 마더 Courtney와 파운딩 파더 Dashaun이 세운 아이코닉 하우스로, HBO의 Legendary Max 시즌 3에서 우승했다. 국내 챕터는 2023년 7월 Jijiana에 의해 열렸으며, 코리아 마더 Jijiana가 이끌고 있다.",
      members:[{n:"Jijiana",role:"mother",t:"코리아 마더",since:2023},{n:"Ddudda",role:"child",t:"차일드",since:2023},{n:"Dasol",role:"child",t:"차일드",since:2023},{n:"Novah",role:"child",t:"차일드",since:2023},{n:"Khaki",role:"child",t:"차일드",since:2023},{n:"Wizzard",role:"child",t:"차일드",since:2023},{n:"Wooni",role:"child",t:"차일드",since:2023},{n:"Chico",role:"child",t:"차일드",since:2023},{n:"Ariel",role:"child",t:"차일드",since:2023}]},
 
     {id:"juunj",scene:"kiki",name:["The International House of Expensive","Juun.j"],sym:"🃏",accent:"#9B7BD4",founded:2021,chapter:2021,
      motto:"국내에서 태어나 러시아까지 — 프린세스가 둘인 최초의 하우스.",
+     chant:"How much! How much! Expensive Juun.j",
      notes:"2021년 파운딩 마더 Kiki와 파운딩 파더 Wizzard가 세운 인터내셔널 하우스. 국내 하우스 최초로 프린세스를 두 명 두었고, 2024년 10월에는 러시아 챕터가 열렸다.",
      members:[{n:"Zabe",role:"father",t:"오버롤 파더",since:2021},{n:"Kyeon",role:"princess",t:"인터내셔널 프린세스",since:2021},{n:"Sohwa",role:"princess",t:"코리아 프린세스",since:2021},{n:"Maze",role:"child",t:"차일드",since:2021},{n:"Toma",role:"child",t:"차일드",since:2021},{n:"Lora",role:"child",t:"차일드",since:2021},{n:"Kiana",role:"child",t:"차일드",since:2021},{n:"Velvety",role:"child",t:"차일드",since:2021},{n:"Bambi",role:"child",t:"차일드",since:2021},{n:"Shinbi",role:"child",t:"차일드",since:2021},{n:"Sofy",role:"child",t:"차일드",since:2021},{n:"Toro",role:"child",t:"차일드",since:2021},{n:"Mér",role:"child",t:"차일드",since:2021},{n:"Potch",role:"child",t:"차일드",since:2021},{n:"Medeum",role:"child",t:"차일드",since:2021},{n:"Ian",role:"child",t:"차일드",since:2021}]},
 
     {id:"kitsch",scene:"kiki",name:["The International House of","Kitsch"],sym:"🪅",accent:"#D9A441",founded:2017,chapter:2017,
      motto:"대한민국 최초의 하우스 — 여기서 모든 것이 시작됐다.",
+     chant:"K! I! T! KITSCH",
      notes:"2017년 파운딩 마더 UU가 세운 인터내셔널 하우스이자 대한민국 최초의 하우스. 국내 하우스 최초로 해외에 두 개의 챕터를 열었다. UU는 '보깅 여신'으로 알려지며 유튜브를 통해 보깅을 대중에게 알린 인물이기도 하다.",
      members:[{n:"UU",role:"mother",t:"파운딩 마더",since:2017},{n:"Ezy",role:"father",t:"코리아 파더",since:2017},{n:"Shin",role:"father",t:"코리아 파더",since:2017},{n:"Sellina",role:"princess",t:"코리아 프린세스",since:2017},{n:"Nuti",role:"child",t:"차일드",since:2017},{n:"Bella",role:"child",t:"차일드",since:2017},{n:"Leeyu",role:"child",t:"차일드",since:2017},{n:"Wavy",role:"child",t:"차일드",since:2017},{n:"Keizy",role:"child",t:"차일드",since:2017},{n:"Listy",role:"child",t:"차일드",since:2017},{n:"Rosetta",role:"child",t:"차일드",since:2017},{n:"Ánimo",role:"child",t:"차일드",since:2017},{n:"Pring",role:"child",t:"차일드",since:2017},{n:"Svmin",role:"child",t:"차일드",since:2017},{n:"Chajun",role:"child",t:"차일드",since:2017},{n:"Hyesu",role:"child",t:"차일드",since:2017},{n:"Halim",role:"child",t:"차일드",since:2017},{n:"Dela",role:"child",t:"차일드",since:2017},{n:"Kyam",role:"child",t:"차일드",since:2017},{n:"Cheen",role:"child",t:"차일드",since:2017},{n:"Taylor",role:"child",t:"차일드",since:2017},{n:"Zarina",role:"child",t:"차일드",since:2017},{n:"Zucchini",role:"child",t:"차일드",since:2017},{n:"Nana",role:"child",t:"차일드",since:2017}]},
 
     {id:"louboutin",scene:"kiki",name:["The Legendary Luxurious House of","Louboutin"],sym:"👠",accent:"#C2373B",founded:2010,chapter:2023,
      motto:"2023년 11월, 여덟 명이 함께 연 레드솔의 국내 챕터.",
+     chant:"LOU~ BOU-T-I-N",
      notes:"2010년 파운딩 마더 Tassy와 파운딩 파더 Alex가 세운 레전더리 하우스. 국내 챕터는 2023년 11월 Jayme, Beautia, Chanel, Biki, Mmia, Seeya, Vanell, Duro에 의해 열렸다.",
      members:[{n:"Beautia",role:"mother",t:"코리아 마더",since:2023},{n:"Jayme",role:"father",t:"코리아 파더",since:2023},{n:"Seeya",role:"princess",t:"코리아 프린세스",since:2023},{n:"Chanel",role:"child",t:"차일드",since:2023},{n:"Mia",role:"child",t:"차일드",since:2023},{n:"Biki",role:"child",t:"차일드",since:2023},{n:"Vanell",role:"child",t:"차일드",since:2023},{n:"Duro",role:"child",t:"차일드",since:2023},{n:"Nabi",role:"child",t:"차일드",since:2023},{n:"Jimi",role:"child",t:"차일드",since:2023},{n:"Xydo",role:"child",t:"차일드",since:2023},{n:"Tina",role:"child",t:"차일드",since:2023},{n:"Jasper",role:"child",t:"차일드",since:2023},{n:"Yujin",role:"child",t:"차일드",since:2023}]},
 
     {id:"love",scene:"kiki",name:["House of","Love"],sym:"❤️",accent:"#E04558",founded:2018,chapter:2018,
      motto:"국내 최대 규모 — 한국 볼룸씬의 형성과 확장을 이끈 하우스.",
+     chant:"L- O- V- E- Victory! Victory!",
      notes:"2017년 I LOVE VOGUE라는 팀으로 시작해 2018년 파운딩 마더 Ran이 세운 국내 최대 규모의 하우스. Ran은 2017년 한국 최초의 보그 볼인 Mangwon Ball을 개최해 '한국 보깅의 어머니'로 불린다. 한국에서 가장 많은 Trailblazer와 Legendary를 보유하고 있으며, 초창기 멤버 여럿이 지금 다른 하우스의 마더·파더를 맡고 있다.",
      members:[{n:"Ran",role:"mother",t:"파운딩 마더",since:2018},{n:"Titch",role:"mother",t:"마더",since:2018},{n:"Macawooo",role:"father",t:"파더",since:2018},{n:"My",role:"princess",t:"프린세스",since:2018},{n:"Jaxon",role:"prince",t:"프린스",since:2018},{n:"Berry",role:"child",t:"차일드",since:2018},{n:"Leehee",role:"child",t:"차일드",since:2018},{n:"Seryeon",role:"child",t:"차일드",since:2018},{n:"Vessi",role:"child",t:"차일드",since:2018},{n:"Leeve",role:"child",t:"차일드",since:2018},{n:"Kiri",role:"child",t:"차일드",since:2018},{n:"Serim",role:"child",t:"차일드",since:2018},{n:"Hazzi",role:"child",t:"차일드",since:2018},{n:"Deana",role:"child",t:"차일드",since:2018},{n:"Rally",role:"child",t:"차일드",since:2018},{n:"Eitch",role:"child",t:"차일드",since:2018},{n:"Layla",role:"child",t:"차일드",since:2018},{n:"Ribo",role:"child",t:"차일드",since:2018},{n:"Rozia",role:"child",t:"차일드",since:2018},{n:"Axi",role:"child",t:"차일드",since:2018},{n:"Jinwoo",role:"child",t:"차일드",since:2018},{n:"Donut",role:"child",t:"차일드",since:2018},{n:"Togi",role:"child",t:"차일드",since:2018},{n:"Sandy",role:"child",t:"차일드",since:2018},{n:"Saya",role:"child",t:"차일드",since:2018},{n:"Tachi",role:"child",t:"차일드",since:2018}]},
 
     {id:"pinklady",scene:"kiki",name:["The Iconic 2x Hall of Fame House of","Pinklady"],sym:"💕",accent:"#F08BB8",founded:2005,chapter:2024,
      motto:"가장 오래 운영 중인 키키 하우스의 국내 챕터.",
+     chant:"P- I- N- K- P- I- N- K",
      notes:"2005년 파운딩 파더 Omari가 세운 아이코닉 하우스로, 가장 오래 운영 중인 키키 하우스다. 인터내셔널 마더 Koppi가 있으며, 국내 챕터는 2024년 9월 Quriyah에 의해 열렸다.",
      members:[{n:"Quriyah",role:"member",t:"멤버",since:2024},{n:"Siri",role:"member",t:"멤버",since:2024}]},
 
     {id:"promachos",scene:"kiki",name:["The International House of","Promachos"],sym:"⚔️",accent:"#97A8C4",founded:2021,chapter:2021,
      motto:"국내 하우스 최초로 해외에 챕터를 연 하우스.",
+     chant:"Slay~ Werk~ Pose~ Promachos!",
      notes:"2021년 인터내셔널 파운딩 마더 Rangé가 세운 하우스. 국내 하우스 중 최초로 외국(중국, 2024년 7월)에 챕터를 열었다.",
      members:[{n:"Hazé",role:"father",t:"코리아 파더",since:2021},{n:"Boobie",role:"princess",t:"코리아 프린세스",since:2021},{n:"Hina",role:"child",t:"차일드",since:2021},{n:"Gabel",role:"child",t:"차일드",since:2021},{n:"Myu",role:"child",t:"차일드",since:2021},{n:"Kata",role:"child",t:"차일드",since:2021},{n:"Carly",role:"child",t:"차일드",since:2021},{n:"Katz",role:"child",t:"차일드",since:2021},{n:"Kenzie",role:"child",t:"차일드",since:2021},{n:"Haneul",role:"child",t:"차일드",since:2021},{n:"Vanté",role:"child",t:"차일드",since:2021}]},
 
     {id:"purplesquall",scene:"kiki",name:["House of","Purple Squall"],sym:"🌩️",accent:"#8A63D2",founded:2024,chapter:2024,
      motto:"2024년 Helena가 세운 보랏빛 스콜.",
+     chant:"Make your Storm~ PURPLE SQUALL!",
      notes:"2024년 파운딩 마더 Helena가 세운 하우스. 파운딩 프린세스 Yujin과 파운딩 퀸 Madame Big이 함께한다.",
      members:[{n:"Helena",role:"mother",t:"파운딩 마더",since:2024},{n:"Madame Big",role:"queen",t:"파운딩 퀸",since:2024},{n:"Wonji",role:"child",t:"차일드",since:2024},{n:"Innie",role:"child",t:"차일드",since:2024},{n:"Ozzi",role:"child",t:"차일드",since:2024},{n:"Chipy",role:"child",t:"차일드",since:2024},{n:"Hongsee",role:"child",t:"차일드",since:2024},{n:"Yuon",role:"child",t:"차일드",since:2024}]},
 
     {id:"sage",scene:"kiki",name:["House of","Sage"],sym:"🌐",accent:"#7BAF7B",founded:2026,chapter:2026,
      motto:"2026년, Hua Mulan에서 갈라져 나온 새 하우스.",
+     chant:"S! A! G-E! Sage Stay~",
      notes:"2026년 파운딩 마더 Cherra와 파운딩 파더 Simbaa가 세운 하우스. 멤버 대부분이 House of Hua Mulan의 전 멤버로 구성되어 있다.",
      members:[{n:"Cherra",role:"mother",t:"파운딩 마더",since:2026},{n:"Simbaa",role:"father",t:"파운딩 파더",since:2026},{n:"Bob",role:"child",t:"차일드",since:2026},{n:"Weety",role:"child",t:"차일드",since:2026},{n:"Len",role:"child",t:"차일드",since:2026},{n:"Heather",role:"child",t:"차일드",since:2026},{n:"Gigi",role:"child",t:"차일드",since:2026},{n:"Teeny",role:"child",t:"차일드",since:2026}]},
 
     {id:"spicy",scene:"kiki",name:["House of","Spicy"],sym:"🌶️",accent:"#E05A2B",founded:2023,chapter:2023,
      motto:"2023년 Hexy가 세운, 이름 그대로 매운 하우스.",
+     chant:"Move! This Fucking! Spi~cy~",
      notes:"2023년 파운딩 마더 Hexy가 세운 하우스. 마더 Mach가 함께한다.",
      members:[{n:"Hexy",role:"mother",t:"파운딩 마더",since:2023},{n:"Mach",role:"mother",t:"마더",since:2023},{n:"Noeul",role:"child",t:"차일드",since:2023},{n:"Sunyoung",role:"child",t:"차일드",since:2023},{n:"Junior",role:"child",t:"차일드",since:2023},{n:"Maria",role:"child",t:"차일드",since:2023},{n:"Theo",role:"child",t:"차일드",since:2023},{n:"Moon",role:"child",t:"차일드",since:2023},{n:"Regina",role:"child",t:"차일드",since:2023}]},
 
     {id:"taegeukmoonee",scene:"kiki",name:["House of","Taegeukmoonee"],sym:"☯️",accent:"#5B8FD9",founded:2024,chapter:2024,
      motto:"대학 보깅씬에서 태어나 키키 하우스로 데뷔.",
+     chant:"Red and Blue! (I say) It's TAEGEUK!",
      notes:"2024년 파운딩 마더 Jaeyeon이 세운 하우스. 2023년 1월 대학교 보깅 씬에서 베이비 보그 하우스로 시작했고, House of Veneta Ball 2024에서 새로운 키키 하우스로 데뷔했다.",
      members:[{n:"Jaeyeon",role:"mother",t:"파운딩 마더",since:2024},{n:"Nakyung",role:"princess",t:"프린세스",since:2024},{n:"Soohyun",role:"child",t:"차일드",since:2024},{n:"Charlie",role:"child",t:"차일드",since:2024},{n:"Yeonkyung",role:"child",t:"차일드",since:2024},{n:"Jiyoon",role:"child",t:"차일드",since:2024}]},
 
     {id:"telfar",scene:"kiki",name:["The Artistic Haus of","Telfar"],sym:"👜",accent:"#A87B4E",founded:2021,chapter:2024,
      motto:"2024년 5월 Roh가 연 아티스틱 하우스의 국내 챕터.",
+     chant:"Tel~far~",
      notes:"2021년 파운딩 파더 Myles와 Jah가 세운 인터내셔널 하우스. 국내 챕터는 2024년 5월 Roh에 의해 열렸다.",
      members:[{n:"Whiskey",role:"member",t:"멤버",since:2024},{n:"Roh",role:"member",t:"멤버",since:2024}]},
 
     {id:"veneta",scene:"kiki",name:["The International House of","Veneta"],sym:"⚕",accent:"#2F8FA3",founded:2021,chapter:2021,
      motto:"국내에서 태어나 중국으로 — Now의 하우스.",
+     chant:"V- E! N~ E- T! - A Walk! Vene~ta~",
      notes:"2021년 파운딩 페런트 Now가 세운 하우스. 오버롤 마더 Itzel이 있으며, 2025년 12월 중국 챕터가 열렸다.",
      members:[{n:"Now",role:"parent",t:"파운딩 페런트",since:2021},{n:"Itzel",role:"mother",t:"오버롤 마더",since:2021},{n:"Pink",role:"child",t:"차일드",since:2021},{n:"Bogus",role:"child",t:"차일드",since:2021},{n:"Zadu",role:"child",t:"차일드",since:2021},{n:"Alexandra",role:"child",t:"차일드",since:2021},{n:"Newceive",role:"child",t:"차일드",since:2021},{n:"Lina",role:"child",t:"차일드",since:2021},{n:"Yessy",role:"child",t:"차일드",since:2021},{n:"Leiná",role:"child",t:"차일드",since:2021},{n:"Midori",role:"child",t:"차일드",since:2021},{n:"Raven",role:"child",t:"차일드",since:2021},{n:"Ligeon",role:"child",t:"차일드",since:2021},{n:"Mincat",role:"child",t:"차일드",since:2021}]},
 
     {id:"versace",scene:"kiki",name:["The Legendary Impeccable 16.5k Haus of","Versace"],sym:"⚜️",accent:"#E8C547",founded:2018,chapter:2024,
      motto:"2024년 4월, 네 명이 함께 연 메두사의 국내 챕터.",
+     chant:"DonaTella ~ Versace G G",
      notes:"2018년 파운딩 마더 Kylie와 파운딩 파더 Mike가 세운 레전더리 하우스. 국내 챕터는 2024년 4월 Jacky, Rucy, Hwalang, Esol에 의해 열렸다.",
      members:[{n:"Jacky",role:"god",t:"코리아 갓파더",since:2024},{n:"Hwalang",role:"father",t:"코리아 파더",since:2024},{n:"Rucy",role:"princess",t:"코리아 프린세스",since:2024},{n:"Esol",role:"child",t:"차일드",since:2024},{n:"Kirby",role:"child",t:"차일드",since:2024},{n:"Sugar",role:"child",t:"차일드",since:2024},{n:"Hera",role:"child",t:"차일드",since:2024},{n:"Velo",role:"child",t:"차일드",since:2024},{n:"Zen",role:"child",t:"차일드",since:2024},{n:"Gańe",role:"child",t:"차일드",since:2024},{n:"Churr",role:"child",t:"차일드",since:2024}]},
 
     /* ─────── 메이저 (메인스트림) 씬 | Major Scene ─────── */
     {id:"basquiat",scene:"major",name:["The Undeniable International House of","Basquiat"],sym:"👑",accent:"#E8B84B",founded:2021,chapter:2025,
      motto:"Legendary HBO Max S2의 그 하우스 — 아시아 챕터.",
+     chant:"Ba!!! Squi Squi Motherfucker! Ba!!! Squi Squi Goddamn!",
      notes:"2021년 파운딩 오버롤 마더 Michelle'e(Yuriel)와 파운딩 오버롤 파더 Dashaun이 세운 인터내셔널 하우스. HBO Max의 Legendary 시즌 2에서 하우스를 공개했다. 2025년 4월 Ball is Ball 2025에서 아시아 마더 Helena를 중심으로 아시아 챕터가 열렸다.",
      members:[{n:"Helena",role:"mother",t:"아시아 마더",since:2025},{n:"Itna",role:"member",t:"멤버",since:2025}]},
 
     {id:"ebony",scene:"major",name:["The Iconic House of","Ebony"],sym:"🩸",accent:"#A32638",founded:1978,chapter:2024,
      motto:"1978년부터 — 볼룸의 산 역사, 그 한국 챕터.",
+     chant:"E~~bony (E4L Bitch!)",
      notes:"1978년 파운딩 마더 Larry와 파운딩 파더 Richard가 세운 아이코닉 하우스. 현재 오버롤 마더 Toya와 오버롤 파더 Bam이 있다. 국내 챕터는 2024년 6월 Shuu에 의해 열렸다.",
      members:[{n:"Shuu",role:"mother",t:"코리아 마더",since:2024},{n:"Wooni",role:"member",t:"멤버",since:2024},{n:"Weety",role:"member",t:"멤버",since:2024}]},
 
     {id:"elle",scene:"major",name:["The International House of","Elle"],sym:"✨",accent:"#F0D9B0",founded:2020,chapter:2022,
      motto:"2022년 8월 Rangé가 연 국내 챕터.",
+     chant:"E~elle (International!)",
      notes:"2020년대 초 Stan이 세운 인터내셔널 하우스. 국내 챕터는 2022년 8월 Rangé에 의해 열렸다.",
      members:[{n:"Rangé",role:"member",t:"멤버",since:2022},{n:"UU",role:"member",t:"멤버",since:2022},{n:"Boobie",role:"member",t:"멤버",since:2022},{n:"Mér",role:"member",t:"멤버",since:2022}]},
 
     {id:"gucci",scene:"major",name:["The Legendary International House of","Gorgeous Gucci"],sym:"💚",accent:"#2E8B57",founded:2019,chapter:2023,
      motto:"전 Mizrahi 멤버들이 세운 레전더리 하우스의 한국 챕터.",
+     chant:"Gor! Geous! Gu-cci! What's Up?",
      notes:"2019년 전 House of Mizrahi 멤버였던 Jack, Marlon, Kelly, Trace가 새롭게 세운 레전더리 인터내셔널 하우스. 국내 챕터는 2023년 10월 Haejun에 의해 열렸다.",
      members:[{n:"Wizzard",role:"father",t:"코리아 파더",since:2023},{n:"Haejun",role:"princess",t:"아시아 프린세스",since:2023},{n:"Jaxon",role:"prince",t:"코리아 프린스",since:2023},{n:"Paris",role:"child",t:"차일드",since:2023},{n:"Harin",role:"child",t:"차일드",since:2023},{n:"Toro",role:"child",t:"차일드",since:2023},{n:"Ariel",role:"child",t:"차일드",since:2023},{n:"Velo",role:"child",t:"차일드",since:2023},{n:"Khaki",role:"child",t:"차일드",since:2023},{n:"Ran",role:"child",t:"차일드",since:2023},{n:"Zucchini",role:"child",t:"차일드",since:2023},{n:"Donut",role:"child",t:"차일드",since:2023}]},
 
     {id:"icon",scene:"major",name:["The Iconic International Hall of Fame House of","Icon"],sym:"🧿",accent:"#3D6FE0",founded:1999,chapter:2021,
      motto:"드라마틱 보그 펨의 어머니, Ashley의 하우스.",
+     chant:"I-con-",
      notes:"1999년 파운딩 마더 Ashley, Sabrina와 파운딩 파더 James가 세운 아이코닉 하우스. 파운딩 마더 Ashley(Mother of Dramatic)는 여성 최초로 드라마틱 보그 펨을 선보였다. 국내 챕터는 2021년 11월 Now에 의해 열렸다.",
      members:[{n:"Now",role:"princess",t:"아시아 프린세스",since:2021},{n:"Berry",role:"member",t:"멤버",since:2021},{n:"Haro",role:"member",t:"멤버",since:2021},{n:"Leiná",role:"member",t:"멤버",since:2021},{n:"Itzel",role:"member",t:"멤버",since:2021},{n:"Xo",role:"member",t:"멤버",since:2021}]},
 
     {id:"khan",scene:"major",name:["The Iconic House of","Khan"],sym:"💪",accent:"#8a6f3e",founded:1987,chapter:2024,
      motto:"2024년 7월 Shin이 연 아이코닉 하우스의 국내 챕터.",
+     chant:"Khan~ (In the Building!)",
      notes:"1987년 파운딩 파더 Lowell과 Mario가 세운 아이코닉 하우스. 오버롤 파더 Luna와 Charles가 있다. 국내 챕터는 2024년 7월 Shin에 의해 열렸다.",
      members:[{n:"Ánimo",role:"member",t:"멤버",since:2024},{n:"Junior",role:"member",t:"멤버",since:2024},{n:"Quriyah",role:"member",t:"멤버",since:2024}]},
 
     {id:"lanvin",scene:"major",name:["The Legendary Xclusive House of","Lanvin"],sym:"🐆",accent:"#C9973B",founded:2013,chapter:2025,
      motto:"Lacroix와 Evisu가 합쳐져 태어난 하우스 — 국내 챕터.",
+     chant:"La-La-La~vin! La-La~vin! La-La~vin! Lanvin!",
      notes:"2013년 House of Lacroix와 House of Evisu가 하나로 병합되어 탄생한 레전더리 하우스. 인터내셔널 마더 Lasseindra가 있다. 국내 챕터는 2025년 11월 Kitsne에 의해 열렸으며, 현재 국내 멤버는 Kitsne가 유일하다.",
      members:[{n:"Kitsne",role:"member",t:"멤버",since:2025}]},
 
     {id:"milan",scene:"major",name:["The Royal Iconic House of","Milan"],sym:"〽️",accent:"#D43E6E",founded:1989,chapter:2022,
      motto:"2022년 8월, 세 명이 함께 연 로열 아이코닉 하우스.",
+     chant:"Mi La~n (Mil~)",
      notes:"1989년 파운딩 마더 Terry와 파운딩 파더 Roger가 세운 아이코닉 하우스. 현재 인터내셔널 오버롤 파더 Jamal이 있다. 국내 챕터는 2022년 8월 K, Macawoo, Luve에 의해 열렸다.",
      members:[{n:"K",role:"father",t:"코리아 파더",since:2022},{n:"Macawoo",role:"overseer",t:"코리아 오버시어",since:2022},{n:"Kata",role:"child",t:"차일드",since:2022},{n:"Hazzi",role:"child",t:"차일드",since:2022},{n:"Xinae",role:"child",t:"차일드",since:2022},{n:"Beautia",role:"child",t:"차일드",since:2022},{n:"Hokeep",role:"child",t:"차일드",since:2022},{n:"Roi",role:"child",t:"차일드",since:2022},{n:"Bibiana",role:"child",t:"차일드",since:2022},{n:"Sonick",role:"child",t:"차일드",since:2022},{n:"Jasper",role:"child",t:"차일드",since:2022},{n:"Vanell",role:"child",t:"차일드",since:2022},{n:"Lala",role:"child",t:"차일드",since:2022}]},
 
     {id:"miyakemugler",scene:"major",name:["The Iconic House of","Miyake Mugler"],sym:"〽️",accent:"#6B7FD9",founded:1989,chapter:2024,
      motto:"2024년 11월 Seeya와 Whiskey가 연 국내 챕터.",
+     chant:"Miyake! Mugler~",
      notes:"1989년 파운딩 파더 David와 파운딩 멤버 Raleigh, Julian이 세운 아이코닉 하우스. 국내 챕터는 2024년 11월 Seeya와 Whiskey에 의해 열렸다.",
      members:[{n:"Whiskey",role:"member",t:"멤버",since:2024},{n:"Jayme",role:"member",t:"멤버",since:2024},{n:"Biki",role:"member",t:"멤버",since:2024}]},
 
     {id:"mizrahi",scene:"major",name:["The Iconic House of","Mizrahi"],sym:"〽️",accent:"#35A08A",founded:1992,chapter:2024,
      motto:"Andre Mizrahi의 유산 — 한국 챕터.",
+     chant:"Mi~ Za~ Ra~ Hi~",
      notes:"1992년 파운딩 파더 Andre가 세운 아이코닉 하우스. 오버롤 마더 Koppi와 인터내셔널 마더 Xyza가 있다. 국내 챕터는 2024년 9월 Frien에 의해 열렸다.",
      members:[{n:"Leehee",role:"princess",t:"코리아 프린세스",since:2024},{n:"Frien",role:"prince",t:"코리아 프린스",since:2024},{n:"Chu",role:"member",t:"멤버",since:2024},{n:"Churr",role:"member",t:"멤버",since:2024},{n:"Sini",role:"member",t:"멤버",since:2024},{n:"On",role:"member",t:"멤버",since:2024},{n:"Fering",role:"member",t:"멤버",since:2024}]},
 
     {id:"ninaoricci",scene:"major",name:["The Royal International House of","Nina Oricci"],sym:"🦉",accent:"#8E6FC4",founded:2019,chapter:2019,
      motto:"2019년 10월 My와 Kiri가 연 국내 챕터.",
+     chant:"Nina Nina O~ Oricci",
      notes:"2019년 파운딩 마더 Gillete와 House of Mizrahi의 전 인터내셔널 파더 Omari가 세운 인터내셔널 하우스. 국내 챕터는 2019년 10월 My와 Kiri에 의해 열렸다.",
      members:[{n:"My",role:"mother",t:"코리아 마더",since:2019},{n:"Kaptain",role:"father",t:"코리아 파더",since:2019},{n:"Deana",role:"overseer",t:"코리아 오버시어",since:2019},{n:"Esol",role:"child",t:"차일드",since:2019},{n:"Dalma",role:"child",t:"차일드",since:2019},{n:"Duro",role:"child",t:"차일드",since:2019},{n:"Rina",role:"child",t:"차일드",since:2019},{n:"Carly",role:"child",t:"차일드",since:2019},{n:"Xydo",role:"child",t:"차일드",since:2019},{n:"Lune",role:"child",t:"차일드",since:2019},{n:"Manta",role:"child",t:"차일드",since:2019},{n:"JT",role:"child",t:"차일드",since:2019},{n:"Hazé",role:"child",t:"차일드",since:2019},{n:"Chanel",role:"child",t:"차일드",since:2019},{n:"Nabi",role:"child",t:"차일드",since:2019}]},
 
     {id:"ninja",scene:"major",name:["The Iconic House of","Ninja"],sym:"⛩️",accent:"#B03A48",founded:1982,chapter:2008,
      motto:"'보깅의 아버지' Willi Ninja의 하우스 — 한국 볼룸의 첫 챕터.",
+     chant:"N I- N I- NINJA",
      notes:"1982년, '보깅의 아버지(God Father of Voguing)'로 불리는 Willi Ninja가 세운 아이코닉 하우스. 모든 인종과 섹슈얼리티에게 문을 연 당시 전례 없는 하우스였고, 가장 포용적인 하우스로 그 정신이 이어지고 있다. 국내 챕터는 2008년 Wooyon에 의해 열렸다 — 한국에서 가장 오래된 챕터다.",
      members:[{n:"Titch",role:"mother",t:"코리아 마더",since:2008},{n:"Wooyon",role:"member",t:"멤버",since:2008},{n:"Jacky",role:"member",t:"멤버",since:2008},{n:"Potch",role:"member",t:"멤버",since:2008},{n:"Bob",role:"member",t:"멤버",since:2008},{n:"Sofy",role:"member",t:"멤버",since:2008},{n:"Tina",role:"member",t:"멤버",since:2008},{n:"Kirby",role:"member",t:"멤버",since:2008},{n:"Axi",role:"member",t:"멤버",since:2008},{n:"Vanté",role:"member",t:"멤버",since:2008}]},
 
     {id:"prodigy",scene:"major",name:["The Iconic Innovate House of","Prodigy"],sym:"🅿️",accent:"#4F9ED9",founded:2002,chapter:2025,
      motto:"2025년 3월 Ezy가 연 국내 챕터.",
+     chant:"P! R! O! D! IGY~",
      notes:"2002년 House of Ebony의 전 오버롤 파더 Mann과 파운딩 멤버들이 세운 아이코닉 하우스. 국내 챕터는 2025년 3월 Ezy에 의해 열렸다.",
      members:[{n:"Ezy",role:"member",t:"멤버",since:2025},{n:"Kiri",role:"member",t:"멤버",since:2025},{n:"Keizy",role:"member",t:"멤버",since:2025},{n:"Dela",role:"member",t:"멤버",since:2025},{n:"Toma",role:"member",t:"멤버",since:2025}]},
 
     {id:"revlon",scene:"major",name:["The Unforgettable Iconic House of","Revlon"],sym:"®️",accent:"#E0526F",founded:1989,chapter:2025,
      motto:"2025년 5월 Cherra가 연 국내 챕터.",
+     chant:"R! E! V! LO! LON!",
      notes:"1989년 파운딩 마더 Danielle과 파운딩 파더 Tony가 세운 아이코닉 하우스. 인터내셔널 마더 Keiona가 있다. 국내 챕터는 2025년 5월 Cherra에 의해 열렸다.",
      members:[{n:"Cherra",role:"member",t:"멤버",since:2025},{n:"Rucy",role:"member",t:"멤버",since:2025},{n:"Edgar",role:"member",t:"멤버",since:2025}]},
 
     {id:"stlaurent",scene:"major",name:["The Iconic House of","St. Laurent"],sym:"💜",accent:"#7E5FC4",founded:1982,chapter:2023,
      motto:"1982년부터 이어져 온 이름 — 한국 챕터.",
+     chant:"Of course~ Of course it's St. Laurent!",
      notes:"1982년 파운딩 마더 Christopher와 파운딩 멤버 Robert, Octavia가 세운 아이코닉 하우스. 2009년 문을 닫았다가 2013년 당시 오버롤 파더 Cory에 의해 다시 열렸다. 국내 챕터는 2023년 4월 Shoota에 의해 열렸다.",
      members:[{n:"Shoota",role:"member",t:"멤버",since:2023},{n:"Robin",role:"member",t:"멤버",since:2023},{n:"Eve",role:"member",t:"멤버",since:2023},{n:"Queena",role:"member",t:"멤버",since:2023},{n:"Hyesu",role:"member",t:"멤버",since:2023},{n:"Xake",role:"member",t:"멤버",since:2023},{n:"Jerry",role:"member",t:"멤버",since:2023},{n:"Yujin",role:"member",t:"멤버",since:2023},{n:"Leeyu",role:"member",t:"멤버",since:2023},{n:"Vior",role:"member",t:"멤버",since:2023}]},
 
     {id:"west",scene:"major",name:["The International Captivating House of","West"],sym:"🔱",accent:"#3BAA8F",founded:2018,chapter:2023,
      motto:"2023년 10월 Kyeon이 연 국내 챕터.",
+     chant:"We~~est! Let's go West!",
      notes:"2018년 파운딩 오버롤 파더 James가 세운 인터내셔널 하우스. House of Khan의 전 멤버들이 모여 세웠다고 전해진다. 국내 챕터는 2023년 10월 Kyeon에 의해 열렸다.",
      members:[{n:"Kiki",role:"princess",t:"아시아 프린세스",since:2023},{n:"Kyeon",role:"princess",t:"코리아 프린세스",since:2023},{n:"Dia",role:"member",t:"멤버",since:2023},{n:"Maze",role:"member",t:"멤버",since:2023},{n:"Akira",role:"member",t:"멤버",since:2023},{n:"Zabe",role:"member",t:"멤버",since:2023},{n:"Jijiana",role:"member",t:"멤버",since:2023},{n:"Lora",role:"member",t:"멤버",since:2023},{n:"Sev",role:"member",t:"멤버",since:2023},{n:"Kiana",role:"member",t:"멤버",since:2023},{n:"Dasol",role:"member",t:"멤버",since:2023}]},
 
     {id:"xtravaganza",scene:"major",name:["The Iconic House of","Xtravaganza"],sym:"❌",accent:"#E39B2D",founded:1982,chapter:2018,
      motto:"Paris Is Burning의 그 이름 — 한국 챕터.",
+     chant:"X-trava~",
      notes:"1982년 파운딩 마더 Angie와 파운딩 파더 Hector가 세운 아이코닉 하우스. 현재 오버롤 파더 Jose가 있다. 국내 챕터는 2018년 4월 Juju에 의해 열렸다.",
      members:[{n:"Juju",role:"princess",t:"아시아 프린세스",since:2018}]}
   ];
@@ -1031,8 +1085,8 @@
         if(!ags.length)return;any=true;
         html+='<section class="scene-section" style="--scene:'+sc.color+'">'+
           '<span class="scene-ghost" aria-hidden="true">'+sc.ghost+'</span>'+
-          '<div class="scene-head"><span class="sn">'+ags.length+' walking solo</span><h3>'+sceneTitle(sc)+'</h3><p class="blurb">'+sc.blurb+'</p></div>'+
-          '<div class="grid">'+ags.map(buildAgent).join("")+'</div></section>';
+          '<div class="scene-head"><span class="sn">'+ags.length+' walking solo</span><h3>'+sceneTitle(sc)+'</h3><p class="blurb">'+sc.blurb+(sc.chant?'<span class="scene-chant"> — “'+sc.chant+'”</span>':'')+'</p></div>'+
+          '<div class="grid">'+(ags.length?ags.map(buildAgent).join(""):'<p class="empty">아직 007로 등록한 사람이 없어요 — 첫 번째가 되어보세요.</p>')+'</div></section>';
       }else{
         var hs=mergedHouses().filter(function(H){return H.scene===sid;}).filter(function(H){
           if(!f)return true;var hay=(H.name.join(" ")+" "+H.members.map(function(m){return m.n}).join(" ")).toLowerCase();return hay.indexOf(f)>-1;});
@@ -1098,6 +1152,7 @@
           (mother?'<span class="vog">'+esc(mother.t||"Mother")+' — '+esc(mother.n)+'</span>':'')+
         '</div>'+
       '</div>'+
+      (H.chant?'<div class="house-chant"><p class="clabel">House Chant · 하우스 챈트</p><q>'+esc(H.chant)+'</q></div>':'')+
       (H.notes?'<p class="house-notes">'+esc(H.notes)+'</p>':'')+
       (parents.length?'<p class="roster-label"><b>House Parents</b></p>'+
         '<div class="roster parents-roster">'+parents.map(function(m){return portrait(m,H.accent,H.id)}).join("")+'</div>':'')+
