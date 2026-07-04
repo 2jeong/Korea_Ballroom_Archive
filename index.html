@@ -9,25 +9,55 @@
 <meta name="theme-color" content="#120a0e">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>👑</text></svg>">
 <title>GRAND HALL · The Ballroom Issue</title>
+
+<!--
+  ═══════════════════════════════════════════════════════════════
+  GRAND HALL — 파일 안내 지도 (이 파일 하나가 사이트 전체예요)
+  ═══════════════════════════════════════════════════════════════
+
+  크게 세 부분으로 나뉘어요:
+
+  ① <style> ~ </style>   …… 디자인 (CSS: 색, 글꼴, 배치, 애니메이션)
+  ② <body> 안의 HTML     …… 화면의 뼈대 (커버, 검색창, 푸터 등)
+  ③ <script> ~ </script> …… 동작 (JavaScript: 데이터 + 기능)
+
+  ★ 문구를 고치고 싶을 때 찾아갈 곳:
+    · 커버의 제목/부제/날짜   → 아래 <header class="cover"> 부분
+    · 하우스 이름·모토·멤버    → <script> 안의 HOUSES 목록
+    · 007 명단                → <script> 안의 AGENTS 목록
+    · 씬(Major/Kiki/Pier) 설명 → <script> 안의 SCENES 목록
+    · 전체 색상               → 바로 아래 :root 의 색 변수들
+
+  ★ 고칠 때 규칙 딱 하나:
+    따옴표(" "), 쉼표(,), 중괄호({ }), 대괄호([ ])는 그대로 두고
+    그 "안쪽의 글자"만 바꾸세요. 구조가 깨지면 화면이 하얗게 나올 수
+    있는데, 그때는 당황하지 말고 GitHub에서 이전 버전으로 되돌리면 돼요.
+-->
 <style>
+  /* ══════════════════════════════════════════════════
+     디자인 변수 모음 — 사이트 전체의 색·글꼴을 여기서 관리
+     여기 값 하나를 바꾸면 그 색을 쓰는 모든 곳이 한 번에 바뀌어요.
+     색상값은 #RRGGBB 형식 (구글에 "color picker" 검색하면 고르기 쉬움)
+     ══════════════════════════════════════════════════ */
   :root{
-    --ground:#120a0e;
-    --ground-2:#1a0e14;
-    --card:#1d1014;
-    --gold:#D9A441;
-    --gold-hi:#F0D9B0;
-    --gold-deep:#8a5f1e;
-    --rose:#D43E6E;
-    --jade:#2FA39B;
-    --amethyst:#9B7BD4;
-    --paper:#F5ECE0;
-    --paper-dim:#bfae9b;
-    --line:rgba(245,236,224,.14);
-    --accent:var(--gold);
-    --didone:"Didot","Bodoni 72","Bodoni MT","Bodoni","Playfair Display",Georgia,serif;
-    --deco:"Futura","Century Gothic","Avenir Next",-apple-system,system-ui,sans-serif;
-    --sans:"Avenir Next","Segoe UI",-apple-system,system-ui,"Helvetica Neue",Arial,sans-serif;
-    --foil:linear-gradient(105deg,var(--gold-deep) 0%,var(--gold) 30%,#fff3d6 50%,var(--gold) 70%,var(--gold-deep) 100%);
+    --ground:#120a0e;        /* 페이지 전체 바탕색 (거의 검정에 가까운 와인색) */
+    --ground-2:#1a0e14;      /* 바탕색보다 살짝 밝은 보조색 */
+    --card:#1d1014;          /* 카드 배경색 */
+    --gold:#D9A441;          /* 메인 포인트색 — 샴페인 골드 */
+    --gold-hi:#F0D9B0;       /* 골드의 밝은 버전 (하이라이트용) */
+    --gold-deep:#8a5f1e;     /* 골드의 어두운 버전 (테두리용) */
+    --rose:#D43E6E;          /* 푸시아 로즈 — Mother 배지, Kiki 씬 색 */
+    --jade:#2FA39B;          /* 제이드 그린 — Father 배지, Pier 씬 색 */
+    --amethyst:#9B7BD4;      /* 보라 — 하우스 테마색 옵션 중 하나 */
+    --paper:#F5ECE0;         /* 기본 글자색 (빈티지 종이 느낌의 크림색) */
+    --paper-dim:#bfae9b;     /* 흐린 글자색 (보조 설명용) */
+    --line:rgba(245,236,224,.14);  /* 구분선 색 (반투명) */
+    --accent:var(--gold);    /* "현재 강조색" — 하우스마다 이 값이 바뀌며 적용됨 */
+    /* ▼ 글꼴 3종 세트: 뒤로 갈수록 대체 글꼴 (앞엣것이 없으면 뒤엣것 사용) */
+    --didone:"Didot","Bodoni 72","Bodoni MT","Bodoni","Playfair Display",Georgia,serif;   /* 제목용 — VOGUE풍 세리프 */
+    --deco:"Futura","Century Gothic","Avenir Next",-apple-system,system-ui,sans-serif;    /* 라벨용 — 대문자 자간 넓은 산세리프 */
+    --sans:"Avenir Next","Segoe UI",-apple-system,system-ui,"Helvetica Neue",Arial,sans-serif;  /* 본문용 */
+    --foil:linear-gradient(105deg,var(--gold-deep) 0%,var(--gold) 30%,#fff3d6 50%,var(--gold) 70%,var(--gold-deep) 100%);  /* 금박 반짝임 그라디언트 */
   }
   *{box-sizing:border-box}
 
@@ -40,7 +70,9 @@
       radial-gradient(80% 55% at 10% 6%, rgba(217,164,65,.09), transparent 55%),
       var(--ground);
   }
-  /* film grain + vignette */
+  /* 필름 질감 효과 — 화면 전체에 아주 옅은 노이즈(그레인)와
+     가장자리 어둡게(비네트)를 씌워서 옛날 인화지 느낌을 냄.
+     ::before/::after는 "가상 요소" — HTML 없이 CSS만으로 만든 겹layer */
   body::before{
     content:"";position:fixed;inset:0;pointer-events:none;z-index:60;opacity:.05;mix-blend-mode:overlay;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
@@ -50,7 +82,8 @@
     background:radial-gradient(130% 100% at 50% 35%, transparent 55%, rgba(0,0,0,.6) 100%);
   }
 
-  /* cursor spotlight */
+  /* 마우스 스포트라이트 — 커서를 따라다니는 은은한 무대 조명.
+     실제 움직임은 <script> 아래쪽 "spotlight" 부분에서 처리 */
   #spot{
     position:fixed;top:0;left:0;width:560px;height:560px;border-radius:50%;
     pointer-events:none;z-index:50;opacity:0;transition:opacity .8s;
@@ -61,7 +94,8 @@
 
   .wrap{max-width:1220px;margin:0 auto;padding:0 26px 110px;position:relative;z-index:1}
 
-  /* spine text */
+  /* 스파인(책등) 텍스트 — 화면 왼쪽 가장자리에 세로로 쓰인 작은 글씨.
+     좁은 화면(960px 이하)에서는 자동으로 숨겨짐 */
   .spine{
     position:fixed;left:14px;top:50%;z-index:40;
     transform:translateY(-50%) rotate(180deg);
@@ -73,7 +107,10 @@
   .spine b{color:var(--gold);font-weight:600}
   @media(max-width:960px){.spine{display:none}}
 
-  /* ---------------- COVER ---------------- */
+  /* ═══════════ 커버 (잡지 표지) 스타일 ═══════════
+     맨 위 마스트헤드 줄, 큰 GRAND & HALL 로고, 커버라인 등.
+     글자 크기의 clamp(최소, 화면비례, 최대)는 "반응형 크기" —
+     화면이 커지면 글자도 커지되 min/max 안에서만 움직임 */
   .cover{position:relative;padding:28px 26px 0;max-width:1220px;margin:0 auto}
   .masthead-row{
     display:flex;justify-content:space-between;align-items:baseline;gap:14px;
@@ -99,7 +136,8 @@
   }
   @keyframes foil{to{background-position:220% 0}}
 
-  /* boot sequence */
+  /* 오프닝 등장 애니메이션 — 페이지 열릴 때 요소들이 순서대로 떠오름.
+     d1~d5는 등장 순서 (d1이 먼저, d5가 마지막) */
   .boot-in{opacity:0;transform:translateY(16px);animation:boot .9s cubic-bezier(.2,.7,.2,1) forwards}
   .boot-in.d1{animation-delay:.1s}.boot-in.d2{animation-delay:.32s}
   .boot-in.d3{animation-delay:.55s}.boot-in.d4{animation-delay:.75s}.boot-in.d5{animation-delay:.95s}
@@ -133,7 +171,9 @@
   .cover-foot .star{font-family:var(--deco);text-transform:uppercase;letter-spacing:.24em;font-size:.56rem;color:var(--paper-dim);text-align:right}
   .cover-foot .star b{color:var(--gold);font-weight:600}
 
-  /* ---------------- ticker ---------------- */
+  /* ═══════════ 티커 (흐르는 자막) ═══════════
+     커버 아래 "THE CATEGORY IS…"가 옆으로 흐르는 띠.
+     36s 숫자를 줄이면 더 빨리, 늘리면 더 천천히 흐름 */
   .ticker{
     margin-top:22px;border-top:1px solid var(--gold-deep);border-bottom:1px solid var(--gold-deep);
     overflow:hidden;white-space:nowrap;position:relative;
@@ -148,7 +188,7 @@
   .ticker span i{font-family:var(--didone);font-style:italic;font-size:1.05rem;letter-spacing:.02em;color:var(--gold-hi);text-transform:none;vertical-align:-.08em}
   .ticker .d{color:var(--rose)}
 
-  /* ---------------- toolbar ---------------- */
+  /* ═══════════ 툴바 (검색창 + 등록 버튼) ═══════════ */
   .toolbar{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin:34px 0}
   .search{flex:1 1 250px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--line);padding:0 2px 9px}
   .search input{flex:1;background:none;border:none;outline:none;color:var(--paper);font-family:var(--didone);font-style:italic;font-size:1.1rem}
@@ -164,7 +204,8 @@
   .btn span{position:relative;z-index:1}
   .btn:focus-visible{outline:2px solid var(--rose);outline-offset:3px}
 
-  /* ---------------- scene tabs ---------------- */
+  /* ═══════════ 씬 탭 (All / Major / Kiki / Pier / 007) ═══════════
+     탭 버튼 자체는 <script>의 buildTabs()가 자동으로 만들어요 */
   .depts{display:flex;flex-wrap:wrap;gap:8px 6px;border-bottom:1px solid var(--line);margin:0 0 10px}
   .dept{
     font-family:var(--deco);text-transform:uppercase;letter-spacing:.24em;font-size:.66rem;
@@ -177,7 +218,8 @@
   .dept:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
   .dept .ct{font-family:var(--didone);font-style:italic;letter-spacing:0;font-size:.85rem;opacity:.7;margin-left:6px}
 
-  /* ---------------- scene section ---------------- */
+  /* ═══════════ 씬 섹션 (씬별 묶음 영역) ═══════════
+     .scene-ghost = 섹션 뒤에 크게 깔리는 유령 글자 (Major, Kiki…) */
   .scene-section{position:relative;margin:46px 0 64px;}
   .scene-ghost{
     position:absolute;top:-34px;right:-10px;z-index:0;pointer-events:none;
@@ -192,7 +234,11 @@
   .scene-head h3 em{font-style:italic;color:var(--scene,var(--gold))}
   .scene-head .blurb{font-family:var(--didone);font-style:italic;font-size:1rem;color:var(--paper-dim);margin:0;flex:1 1 260px;min-width:220px;text-wrap:balance}
 
-  /* ---------------- feature grid ---------------- */
+  /* ═══════════ 하우스 카드 그리드 ═══════════
+     .feature = 하우스 카드 하나(클릭 가능한 버튼)
+     .plate   = 카드 위쪽 3:4 비율의 "화보 플레이트" (사진 또는 이니셜)
+     .ghost   = 사진이 없을 때 표시되는 커다란 이니셜 글자
+     minmax(295px,1fr) = 카드 최소 너비 295px, 화면에 맞게 자동 배치 */
   .grid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:34px 26px}
 
   .feature{
@@ -260,7 +306,9 @@
 
   .empty{grid-column:1/-1;font-family:var(--didone);font-style:italic;color:var(--paper-dim);font-size:1.2rem;text-align:center;padding:40px 0}
 
-  /* ---------------- registration modal ---------------- */
+  /* ═══════════ 등록 모달 (팝업 창) ═══════════
+     "Register your House" 버튼을 누르면 뜨는 등록 카드.
+     .finput = 밑줄만 있는 입력칸, .sw = 하우스 색 고르는 동그라미 */
   .modal{position:fixed;inset:0;z-index:80;display:grid;place-items:center;padding:18px}
   .modal[hidden]{display:none}
   .modal-back{position:absolute;inset:0;background:rgba(8,4,6,.74);backdrop-filter:blur(7px)}
@@ -327,7 +375,7 @@
   .sw input:focus-visible+span{outline:2px solid var(--rose);outline-offset:3px}
   .msubmit{margin-top:10px;width:100%}
 
-  /* mine controls */
+  /* 내 등록 관리 — 내가 등록한 항목에만 보이는 삭제/수정 링크 */
   .mine-link{
     background:none;border:none;cursor:pointer;padding:0;margin-top:9px;display:inline-block;
     font-family:var(--deco);text-transform:uppercase;letter-spacing:.18em;font-size:.54rem;color:var(--rose);
@@ -341,7 +389,11 @@
   @keyframes flashk{0%{box-shadow:0 0 0 3px var(--accent),0 0 80px -6px var(--accent)}100%{box-shadow:none}}
   .flash .plate{animation:flashk 2.6s ease forwards}
 
-  /* ---------------- photos (duotone treatment) ---------------- */
+  /* ═══════════ 업로드 사진 처리 (듀오톤) ═══════════
+     .photo = 업로드된 사진을 흑백으로 변환
+     .tint  = 그 위에 하우스 색을 입히는 반투명 막 (opacity:.82 를
+              줄이면 색이 옅어지고 원본 색이 더 살아남)
+     .shade = 위아래 어두운 그라데이션 (글자 잘 보이게) */
   .plate .photo{
     position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;
     filter:grayscale(1) contrast(1.07) brightness(.9);
@@ -365,11 +417,15 @@
   }
   .fphoto .prev.on{display:block}
 
-  /* scroll reveal */
+  /* 스크롤 등장 효과 — 카드가 화면에 들어올 때 아래에서 떠오름 */
   .reveal{opacity:0;transform:translateY(22px)}
   .reveal.in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
 
-  /* ---------------- DETAIL spread ---------------- */
+  /* ═══════════ 하우스 상세 페이지 (잡지 스프레드) ═══════════
+     하우스 카드를 클릭하면 나오는 화면.
+     .spread-head = 상단 (하우스 이름 + 리드 사진)
+     .house-notes = 하우스 소개문 (첫 글자가 크게 나오는 드롭캡)
+     .role.mother/.father/… = 역할별 배지 색 */
   .detail{display:none}
   .detail.on{display:block;animation:rise .5s ease}
   @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
@@ -419,7 +475,7 @@
   .pcredit{font-family:var(--deco);text-transform:uppercase;letter-spacing:.16em;font-size:.58rem;color:var(--paper-dim);line-height:1.75}
   .pcredit b{color:var(--accent);font-weight:600}
 
-  /* colophon footer */
+  /* 푸터 (페이지 맨 아래) */
   footer{
     margin-top:60px;border-top:1px solid var(--line);padding-top:26px;
     display:flex;flex-direction:column;align-items:center;gap:9px;
@@ -427,6 +483,7 @@
   footer .mark{font-family:var(--didone);font-style:italic;font-size:1.5rem;color:var(--gold)}
   footer p{margin:0;font-family:var(--deco);text-transform:uppercase;letter-spacing:.32em;font-size:.58rem;color:var(--paper-dim);text-align:center}
 
+  /* 모바일 대응 — 화면 너비 640px 이하일 때만 적용되는 규칙 */
   @media (max-width:640px){
     .spread-head{grid-template-columns:1fr}
     .lead-plate{max-width:330px}
@@ -443,16 +500,25 @@
 </head>
 <body>
 
+<!-- 마우스 스포트라이트용 빈 요소 (움직임은 JS가 담당) -->
 <div id="spot" aria-hidden="true"></div>
+<!-- 화면 왼쪽의 세로 책등 텍스트 — 이 안의 문구는 자유롭게 수정 가능 -->
 <span class="spine" aria-hidden="true">Grand <b>&amp;</b> Hall — the Ballroom Issue · Spring 1988 · New York City</span>
 
+<!-- ═══════════════════════════════════════════
+     커버 (잡지 표지) — 여기 텍스트는 전부 직접 수정 가능!
+     &amp; 는 & 기호를 표시하는 HTML 표기법이에요
+     ═══════════════════════════════════════════ -->
 <header class="cover">
+  <!-- 맨 위 마스트헤드: 호수 · 이슈명 · 발행 시기 -->
   <div class="masthead-row boot-in d1">
     <span>Vol. III · N°4</span>
     <span class="mid">The Ballroom Issue</span>
     <span>Spring 1988</span>
   </div>
+  <!-- 큰 로고 (사이트 제목) -->
   <h1 class="boot-in d2">GRAND <span class="amp">&amp;</span> HALL</h1>
+  <!-- 커버라인 (표지의 짧은 헤드라인들) -->
   <div class="rules boot-in d3">
     <div class="coverlines">
       <span><b>The Houses</b> — a register</span>
@@ -460,8 +526,10 @@
       <span>Major · Kiki · Pier <b>&amp; the 007s</b></span>
     </div>
   </div>
+  <!-- 이탤릭 소개 문장 (영문) + 한국어 안내 -->
   <p class="standline boot-in d4">Every house has a name. Every child, a category. Here is the family book.</p>
   <p class="ko boot-in d4">하우스 명부 · 각자 자신의 하우스와 구성원을 등록하고, 모두가 함께 봅니다</p>
+  <!-- 표지 하단: 장식용 바코드 + 커버스타 크레딧 -->
   <div class="cover-foot boot-in d5">
     <div class="barcode" aria-hidden="true">
       <div class="bars"></div>
@@ -469,11 +537,19 @@
     </div>
     <p class="star">featuring<br><b>the Mothers of New York</b></p>
   </div>
+  <!-- 흐르는 자막 띠 — 내용물은 JS의 CALLS 목록에서 자동 생성 -->
   <div class="ticker boot-in d5" aria-hidden="true"><div class="rail" id="rail"></div></div>
 </header>
 
+<!-- ═══════════════════════════════════════════
+     본문 영역 — 명부(directory)와 상세(detail) 두 화면이
+     번갈아 표시돼요. 하우스 카드를 클릭하면 directory가 숨고
+     detail이 나타나는 방식.
+     ═══════════════════════════════════════════ -->
 <div class="wrap">
+  <!-- 화면 1: 명부 (기본 화면) -->
   <section id="directory">
+    <!-- 검색창 + 등록 버튼 -->
     <div class="toolbar">
       <label class="search">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
@@ -482,12 +558,16 @@
       <button class="btn" id="addBtn" type="button"><span>Register your House</span></button>
     </div>
 
+    <!-- 씬 탭 자리 (버튼들은 JS가 자동으로 채움) -->
     <nav class="depts" id="depts" role="tablist" aria-label="Scenes"></nav>
+    <!-- 하우스 카드들이 들어갈 자리 (JS가 자동으로 채움) -->
     <div id="index"></div>
   </section>
 
+  <!-- 화면 2: 하우스 상세 (카드 클릭 시 JS가 내용을 채워서 보여줌) -->
   <section class="detail" id="detail" aria-live="polite"></section>
 
+  <!-- 푸터 — 문구 수정 가능 -->
   <footer>
     <span class="mark">G&amp;H</span>
     <p>Grand &amp; Hall — published by the children, for the children · New York City</p>
@@ -495,6 +575,11 @@
   </footer>
 </div>
 
+<!-- ═══════════════════════════════════════════
+     등록 모달 (팝업) — 평소엔 hidden으로 숨겨져 있다가
+     "Register your House" 버튼을 누르면 JS가 열어줌.
+     폼의 입력칸들은 JS의 renderForm()이 상황에 맞게 만들어 넣음.
+     ═══════════════════════════════════════════ -->
 <div class="modal" id="modal" hidden>
   <div class="modal-back" data-close></div>
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
@@ -508,9 +593,21 @@
 </div>
 
 <script>
-(function(){
-  "use strict";
+/* ═══════════════════════════════════════════════════════════
+   여기서부터 JavaScript — 사이트의 "데이터"와 "동작"을 담당해요.
+   // 로 시작하는 줄과 별표-빗금 기호로 감싼 부분은 주석(설명)이라 실행에 영향 없음.
+   ═══════════════════════════════════════════════════════════ */
+(function(){   // ← 코드 전체를 감싸는 껍데기 (변수가 밖으로 새지 않게)
+  "use strict";   // 엄격 모드 — 실수를 빨리 잡아주는 안전장치
 
+  /* ─────────────────────────────────────────────
+     ★ 씬 목록 — 탭과 섹션 구성이 여기서 나와요
+     · id    : 내부 식별용 이름 (바꾸면 안 됨!)
+     · label : 화면에 보이는 탭 이름 (수정 가능)
+     · color : 그 씬의 상징색 (수정 가능)
+     · ghost : 섹션 뒤에 크게 깔리는 유령 글자 (수정 가능)
+     · blurb : 씬 소개 한 줄 (수정 가능)
+     ───────────────────────────────────────────── */
   var SCENES=[
     {id:"all",  label:"All"},
     {id:"major",label:"Major", color:"#D9A441", ghost:"Major",  blurb:"The established houses — grand prizes, legendary status, and the long memory of the ball."},
@@ -519,16 +616,42 @@
     {id:"007",  label:"007",   color:"#F0D9B0", ghost:"007",    blurb:"Free agents — walking without a house, for now. The category is courage."}
   ];
 
+  /* ═════════════════════════════════════════════
+     ★★★ 하우스 목록 — 화면의 하우스들이 전부 여기서 나와요!
+     문구·이름·연도를 고치고 싶으면 이 목록을 수정하면 됩니다.
+
+     하우스 하나의 구성 (각 항목의 의미):
+     · id        : 내부 식별용 (영문 소문자, 서로 달라야 함. 바꾸지 않는 게 안전)
+     · scene     : 소속 씬 — "major", "kiki", "pier" 중 하나
+     · name      : ["House of","이름"] — 앞부분과 이름 두 조각
+     · accent    : 하우스 상징색 (#RRGGBB)
+     · founded   : 창립 연도 (숫자, 따옴표 없이)
+     · legendary : true면 ★ Legendary 금박 배지가 붙음 / false면 없음
+     · motto     : 하우스 모토 (카드와 상세에 표시)
+     · notes     : 상세 페이지의 소개 문단
+     · members   : 구성원 목록 ↓
+         n     = 이름 / cat = 시그니처 카테고리 / since = 활동 시작 연도
+         role  = 역할: "mother"(마더) "father"(파더)
+                       "child"(차일드) "legend"(레전더리) 중 하나
+
+     ※ 하우스를 통째로 복사-붙여넣기 해서 새 하우스를 만들 수도 있어요.
+       마지막 하우스 뒤가 아니면 닫는 ]} 뒤에 쉼표(,)를 잊지 마세요!
+     ═════════════════════════════════════════════ */
   var HOUSES=[
-    {id:"aurora",scene:"major",name:["House of","Aurora"],accent:"#D9A441",founded:1979,legendary:true,
+    /* ── ① House of Aurora (아래 주석은 이 하우스만 예시로 단 것) ── */
+    {id:"aurora",                       // 내부 이름
+     scene:"major",                     // Major 씬 소속
+     name:["House of","Aurora"],        // 화면 표시: House of Aurora
+     accent:"#D9A441",                  // 상징색: 골드
+     founded:1979,legendary:true,       // 1979년 창립, 레전더리 하우스
      motto:"We do not chase the light — we are the light.",
      notes:"Nine years, four grand prizes, and one rule: you arrive as yourself or not at all. Aurora walks first and leaves last, and every child who wears the name knows the floor is not a stage — it is a home with the lights turned up.",
      members:[
-       {n:"Simone Aurora",role:"mother",cat:"Face",since:1979},
-       {n:"Castor Aurora",role:"father",cat:"Executive Realness",since:1981},
+       {n:"Simone Aurora",role:"mother",cat:"Face",since:1979},           // 마더
+       {n:"Castor Aurora",role:"father",cat:"Executive Realness",since:1981}, // 파더
        {n:"Bijou Aurora",role:"child",cat:"Vogue Femme",since:1984},
        {n:"Theo Aurora",role:"child",cat:"Runway",since:1985},
-       {n:"Liv Aurora",role:"legend",cat:"Face",since:1982},
+       {n:"Liv Aurora",role:"legend",cat:"Face",since:1982},              // 레전더리 멤버
        {n:"Marcel Aurora",role:"child",cat:"Body",since:1986}
      ]},
     {id:"seraphine",scene:"major",name:["House of","Séraphine"],accent:"#D43E6E",founded:1981,legendary:true,
@@ -581,6 +704,10 @@
      ]}
   ];
 
+  /* ─────────────────────────────────────────────
+     ★ 007 명단 — 하우스 없이 걷는 사람들
+     n = 이름 / cat = 카테고리 / since = 시작 연도 / note = 상태 문구
+     ───────────────────────────────────────────── */
   var AGENTS=[
     {n:"Remy 007",cat:"Vogue Femme",since:1987,note:"Seeking a house"},
     {n:"Ash 007",cat:"Face",since:1988,note:"Walking solo"},
@@ -588,7 +715,12 @@
     {n:"Indra 007",cat:"Body",since:1989,note:"Seeking a house"}
   ];
 
-  // ---------- registry store (browser-local) ----------
+  /* ═════════════════════════════════════════════
+     방문자 등록 저장소 — 등록 폼으로 입력된 하우스/멤버/007을
+     "브라우저의 localStorage"에 저장하고 불러오는 부분.
+     ※ localStorage = 각자 브라우저 안의 개인 저장 공간.
+       그래서 등록 내용이 본인에게만 보여요. (서버를 붙이면 해결)
+     ═════════════════════════════════════════════ */
   var KEY="grandhall.reg.v1";
   function loadStore(){
     try{
@@ -613,7 +745,8 @@
   function esc(s){
     return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
   }
-  // photo → 3:4 crop, downscale, jpeg compress (fits browser storage)
+  /* 사진 처리기 — 업로드된 사진을 3:4 비율로 잘라 축소·압축.
+     (원본 그대로 저장하면 브라우저 저장 공간이 금방 차기 때문) */
   function processPhoto(file,cb){
     var img=new Image(),url=URL.createObjectURL(file);
     img.onload=function(){
@@ -633,7 +766,12 @@
     return p?'<img class="photo" src="'+p+'" alt="'+esc(alt||"")+'"><span class="tint"></span><span class="shade"></span>':'';
   }
 
-  // ---------- helpers ----------
+  /* ───────── 자잘한 도우미 함수들 ─────────
+     sceneOf()   : 씬 id로 씬 정보 찾기
+     initials()  : 이름에서 이니셜 2글자 뽑기 (사진 없을 때 표시용)
+     roleLabel() : 역할 코드를 화면용 단어로 변환 (mother→Mother)
+     plateVars() : 이름을 숫자로 바꿔서 카드마다 조명 위치를
+                   조금씩 다르게 만듦 (같은 이름이면 항상 같은 위치) */
   function sceneOf(id){return SCENES.filter(function(s){return s.id===id})[0];}
   function initials(name){
     var p=name.replace(/[éèê]/g,"e").split(/\s+/);
@@ -649,7 +787,9 @@
     return '--spot:'+spot+'%;--beam:'+beam+'deg;';
   }
 
-  // ---------- ticker ----------
+  /* ───────── 흐르는 자막(티커) 내용 만들기 ─────────
+     CALLS 목록의 단어들이 "The category is ___" 형태로 이어져요.
+     단어를 추가/삭제하면 자막 내용이 바뀝니다 */
   var CALLS=["Face","Vogue Femme","Executive Realness","Body","Runway","Bizarre","Butch Realness","Performance"];
   (function(){
     var one="";
@@ -658,7 +798,9 @@
     document.getElementById("rail").innerHTML=one+one; /* duplicate for seamless loop */
   })();
 
-  // ---------- spotlight ----------
+  /* ───────── 마우스 스포트라이트 움직임 ─────────
+     마우스 좌표를 따라 조명 요소를 이동. 터치 기기나
+     "동작 줄이기" 설정을 켠 사용자에게는 자동으로 꺼짐 */
   (function(){
     var spot=document.getElementById("spot");
     if(!window.matchMedia||!matchMedia("(pointer:fine)").matches)return;
@@ -670,7 +812,9 @@
     });
   })();
 
-  // ---------- reveal on scroll ----------
+  /* ───────── 스크롤 등장 감지 ─────────
+     카드가 화면 안에 들어오는 순간을 감지해서
+     "떠오르는" 애니메이션 클래스를 붙여줌 */
   var io=("IntersectionObserver" in window)?new IntersectionObserver(function(es){
     es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
   },{rootMargin:"0px 0px -8% 0px"}):null;
@@ -681,7 +825,11 @@
     });
   }
 
-  // ---------- render ----------
+  /* ═════════════════════════════════════════════
+     화면 그리기 — 위의 데이터(HOUSES 등)를 읽어서
+     실제 HTML 카드로 조립하는 부분.
+     문구를 고치려면 여기가 아니라 위의 데이터 목록을 고치세요!
+     ═════════════════════════════════════════════ */
   var index=document.getElementById("index");
   var depts=document.getElementById("depts");
   var directory=document.getElementById("directory");
@@ -690,8 +838,9 @@
   var currentScene="all";
   var folioN=0;
 
+  /* 하우스 카드 1장의 HTML을 만드는 함수 (명부 화면용) */
   function buildFeature(H){
-    folioN++;
+    folioN++;   // 카드 번호(N°01, N°02…) 매기기
     var parent=H.members.filter(function(m){return m.role==="mother"})[0]||H.members[0];
     return '<button class="feature reveal" type="button" data-id="'+esc(H.id)+'" style="--accent:'+esc(H.accent)+'" aria-label="Open '+esc(H.name.join(" "))+'">'+
       '<div class="plate" style="'+plateVars(H.id)+'">'+
@@ -710,6 +859,7 @@
     '</button>';
   }
 
+  /* 007 한 명의 카드 HTML을 만드는 함수 */
   function buildAgent(A){
     return '<figure class="portrait reveal"'+(A.id?' data-agent-id="'+esc(A.id)+'"':'')+' style="--accent:#F0D9B0">'+
       '<div class="plate" style="'+plateVars(A.n)+'">'+photoLayers(A.photo,A.n)+'<span class="folio">007</span>'+(A.photo?'':'<span class="ghost">'+esc(initials(A.n))+'</span>')+'</div>'+
@@ -728,6 +878,7 @@
     return "The <em>"+sc.label+"</em> scene";
   }
 
+  /* 씬 탭 버튼들(All/Major/Kiki/Pier/007)을 만들고 개수를 세는 함수 */
   function buildTabs(){
     depts.innerHTML="";
     SCENES.forEach(function(s){
@@ -749,6 +900,8 @@
     });
   }
 
+  /* 명부 화면 전체를 그리는 함수 — 선택된 탭과 검색어에 맞는
+     하우스/007만 골라서 씬별 섹션으로 조립 */
   function renderIndex(){
     index.innerHTML="";folioN=0;
     var f=(qInput.value||"").trim().toLowerCase();
@@ -780,6 +933,7 @@
     observe(index);
   }
 
+  /* 구성원 한 명의 초상 카드 HTML (하우스 상세 화면용) */
   function portrait(m,accent,houseId){
     return '<figure class="portrait reveal" style="--accent:'+esc(accent)+'">'+
       '<div class="plate" style="'+plateVars(m.n)+'">'+
@@ -796,6 +950,8 @@
     '</figure>';
   }
 
+  /* 하우스 상세 화면 열기 — 카드를 클릭하면 실행됨.
+     명부를 숨기고, 그 하우스의 스프레드(제목/모토/멤버들)를 그림 */
   function openHouse(id){
     var H=mergedHouses().filter(function(x){return x.id===id})[0];if(!H)return;
     detail.style.setProperty("--accent",H.accent);
@@ -837,6 +993,7 @@
     window.scrollTo({top:0,behavior:"smooth"});
     detail.querySelector(".back").focus();
   }
+  /* 상세 화면 닫고 명부로 돌아가기 */
   function closeHouse(){
     detail.classList.remove("on");detail.innerHTML="";directory.style.display="";
     renderIndex();
@@ -845,9 +1002,11 @@
 
   qInput.addEventListener("input",renderIndex);
 
-  // ================= REGISTRATION DESK =================
-  var CATS=["Face","Vogue Femme","Runway","Body","Performance","Bizarre","Realness","Butch Realness","Executive Realness","Femme Realness"];
-  var SWATCHES=["#D9A441","#D43E6E","#2FA39B","#9B7BD4","#7FA6C9","#C77B4E"];
+  /* ═════════════════════════════════════════════
+     등록 데스크 — 등록 팝업(모달)의 폼 만들기와 저장 처리
+     ═════════════════════════════════════════════ */
+  var CATS=["Face","Vogue Femme","Runway","Body","Performance","Bizarre","Realness","Butch Realness","Executive Realness","Femme Realness"];  // 카테고리 자동완성 목록 (수정 가능)
+  var SWATCHES=["#D9A441","#D43E6E","#2FA39B","#9B7BD4","#7FA6C9","#C77B4E"];  // 하우스 색 선택지 6가지 (수정 가능)
   var modal=document.getElementById("modal");
   var mTabs=document.getElementById("mTabs");
   var mForm=document.getElementById("mForm");
@@ -869,6 +1028,10 @@
     mTabs.appendChild(b);
   });
 
+  /* ── 폼 부품 만드는 도우미들 ──
+     fld() = 라벨+입력칸 한 줄 / txt() = 글자 입력칸
+     photoField() = 사진 선택 버튼 / swatchRow() = 색 선택 동그라미들
+     houseSelect() = 하우스 고르는 드롭다운 */
   function fld(label,inner,hint){
     return '<div class="frow"><label class="flabel">'+label+'</label>'+inner+(hint?'<p class="fhint">'+hint+'</p>':'')+'</div>';
   }
@@ -898,6 +1061,8 @@
 
   var pendingPhotos={};
 
+  /* 등록 폼 그리기 — kind에 따라 다른 입력칸 구성
+     ("house"=새 하우스 / "member"=멤버 추가 / "agent"=007 등록) */
   function renderForm(kind,editHouse){
     formState.kind=kind;formState.editId=editHouse?editHouse.id:null;
     pendingPhotos={};
@@ -977,8 +1142,11 @@
     el.scrollIntoView({behavior:"smooth",block:"center"});
   }
 
+  /* ── 폼 제출 처리 — "등록" 버튼을 눌렀을 때 실행 ──
+     입력값을 읽어서 store(브라우저 저장소)에 넣고,
+     화면을 다시 그린 뒤 새 카드를 반짝여서 보여줌 */
   mForm.addEventListener("submit",function(e){
-    e.preventDefault();
+    e.preventDefault();   // 폼의 기본 동작(페이지 새로고침)을 막음
     var d=new FormData(mForm);
     function v(n){return (d.get(n)||"").toString().trim();}
     if(formState.kind==="house"){
@@ -1023,7 +1191,9 @@
     }
   });
 
-  // delete / edit delegation
+  /* ── 삭제/수정 버튼 처리 ──
+     내가 등록한 항목의 "Remove/Edit" 클릭을 감지해서
+     확인 창을 띄운 뒤 저장소에서 지우거나 수정 폼을 엶 */
   index.addEventListener("click",function(e){
     var del=e.target.closest("[data-del-agent]");
     if(del){
@@ -1055,6 +1225,7 @@
 
   document.getElementById("addBtn").addEventListener("click",function(){openModal("house");});
 
+  /* ── 시작! 페이지가 열리면 탭과 명부를 처음으로 그림 ── */
   buildTabs();
   renderIndex();
 })();
