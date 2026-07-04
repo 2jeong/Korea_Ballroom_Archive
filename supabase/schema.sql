@@ -109,3 +109,10 @@ create policy "update houses" on public.houses for update
 drop policy "update own members" on public.members;
 create policy "update members" on public.members for update
   using (is_curated or owner_token = nullif(current_setting('request.headers', true)::json->>'x-owner-token','')::uuid);
+
+-- ── 마이그레이션 후 정리: 옛 코드 시절 등록된 멤버의 house_id 연결 복구 ──
+-- 옛 코드는 시드 하우스 id가 "bodega" 같은 고정 문자열이었는데,
+-- 마이그레이션 후에는 모든 하우스가 UUID를 쓰므로 다시 연결해줌.
+update public.members
+set house_id = (select id::text from public.houses where name = 'Bodega' and is_curated)
+where house_id = 'bodega';
