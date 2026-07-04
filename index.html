@@ -385,16 +385,34 @@
   /* 여러 줄 입력칸 (소개/약력) */
   textarea.finput{font-family:var(--sans);font-style:normal;font-size:.92rem;line-height:1.65;resize:vertical;min-height:70px}
 
-  /* 멤버 소개(약력) 드롭다운 */
-  .bio-toggle{
-    background:none;border:none;cursor:pointer;padding:0;margin-top:9px;display:inline-block;
-    font-family:var(--deco);text-transform:uppercase;letter-spacing:.16em;font-size:.56rem;color:var(--paper-dim);
+  /* 소개(약력) — 이미지 박스(3:4)를 누르면 앞뒷면 전환하듯 소개가 나옵니다 */
+  .plate.flip{cursor:pointer}
+  .plate .flip-hint{
+    position:absolute;bottom:13px;right:13px;z-index:3;
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.14em;
+    font-size:.5rem;padding:4px 9px;
+    background:rgba(6,3,5,.62);color:var(--paper);border:1px solid var(--line);
+    backdrop-filter:blur(2px);opacity:.92;transition:opacity .3s;pointer-events:none;
   }
-  .bio-toggle:hover{color:var(--accent)}
-  .bio{display:none;margin-top:9px;padding:11px 13px;text-align:left;
-    font-size:.82rem;line-height:1.7;color:var(--paper-dim);
-    background:rgba(245,236,224,.045);border-left:2px solid var(--accent);white-space:pre-line}
-  .bio.on{display:block}
+  .plate.flipped .flip-hint{opacity:0}
+  .plate-back{
+    position:absolute;inset:0;z-index:4;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:24px 21px;text-align:left;overflow:auto;
+    background:linear-gradient(158deg,color-mix(in srgb,var(--accent) 32%,#0b0508),#0b0508 80%);
+    color:var(--paper);font-size:.85rem;line-height:1.72;white-space:pre-line;
+    opacity:0;pointer-events:none;transform:scale(1.05);
+    transition:opacity .42s ease,transform .42s cubic-bezier(.2,.7,.2,1);
+  }
+  .plate.flipped .plate-back{opacity:1;pointer-events:auto;transform:none}
+  .plate-back .bl{
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.2em;
+    font-size:.5rem;color:var(--accent);margin-bottom:11px;flex:none;
+  }
+  .plate-back .bx{
+    font-family:var(--deco);text-transform:uppercase;letter-spacing:.14em;
+    font-size:.5rem;margin-top:14px;opacity:.65;flex:none;
+  }
   .edit-links{display:flex;gap:14px;justify-content:center;margin-top:9px}
   .edit-links .mine-link{margin:0}
 
@@ -963,16 +981,16 @@
   /* 007 한 명의 카드 HTML을 만드는 함수 */
   function buildAgent(A){
     return '<figure class="portrait reveal"'+(A.id?' data-agent-id="'+esc(A.id)+'"':'')+' style="--accent:#F0D9B0">'+
-      '<div class="plate" style="'+plateVars(A.n)+'">'+
+      '<div class="plate'+(A.bio?' flip':'')+'"'+(A.bio?' role="button" tabindex="0" aria-label="소개 보기"':'')+' style="'+plateVars(A.n)+'">'+
         photoLayers(A.photo,A.n)+
         (A.honor?'<span class="tag gold">'+esc(A.honor)+'</span>':'')+
         '<span class="folio">007</span>'+(A.photo?'':ghostHTML(A.n))+
+        (A.bio?'<span class="flip-hint">소개 ⟲</span><div class="plate-back"><span class="bl">소개 · Bio</span>'+esc(A.bio)+'<span class="bx">✕ 닫기</span></div>':'')+
       '</div>'+
       '<figcaption class="pcap">'+
         '<span class="role agent">007</span>'+
         '<h4 class="pname">'+esc(A.n)+'</h4>'+
         '<p class="pcredit">The category — <b>'+esc(A.cat)+'</b><br>'+esc(A.note)+' · since ’'+esc(String(A.since).slice(2))+'</p>'+
-        (A.bio?'<button class="bio-toggle" type="button" data-bio-toggle>▾ 소개 보기</button><div class="bio">'+esc(A.bio)+'</div>':'')+
         (A.mine?'<span class="edit-links"><button class="mine-link" type="button" data-del-agent="'+esc(A.id)+'">Remove — 내 등록</button></span>':'')+
       '</figcaption>'+
     '</figure>';
@@ -1047,11 +1065,12 @@
   function portrait(m,accent,houseId){
     var ref=m.id;
     return '<figure class="portrait reveal" style="--accent:'+esc(accent)+'">'+
-      '<div class="plate" style="'+plateVars(m.n)+'">'+
+      '<div class="plate'+(m.bio?' flip':'')+'"'+(m.bio?' role="button" tabindex="0" aria-label="소개 보기"':'')+' style="'+plateVars(m.n)+'">'+
         photoLayers(m.photo,m.n)+
         (m.honor?'<span class="tag gold">'+esc(m.honor)+'</span>':'')+
         (m.photo?'':ghostHTML(m.n))+
         '<span class="vog">since ’'+esc(String(m.since).slice(2))+'</span>'+
+        (m.bio?'<span class="flip-hint">소개 ⟲</span><div class="plate-back"><span class="bl">소개 · Bio</span>'+esc(m.bio)+'<span class="bx">✕ 닫기</span></div>':'')+
       '</div>'+
       '<figcaption class="pcap">'+
         (m.role==="custom"
@@ -1059,7 +1078,6 @@
           :'<span class="role '+esc(m.role)+'">'+esc(roleLabel(m.role))+'</span>')+
         '<h4 class="pname">'+esc(m.n)+'</h4>'+
         '<p class="pcredit">'+(m.cat?'The category — <b>'+esc(m.cat)+'</b>':'&nbsp;')+'</p>'+
-        (m.bio?'<button class="bio-toggle" type="button" data-bio-toggle>▾ 소개 보기</button><div class="bio">'+esc(m.bio)+'</div>':'')+
         '<span class="edit-links">'+
           '<button class="mine-link gold-link" type="button" data-edit-member="'+esc(ref)+'" data-house="'+esc(houseId)+'">✎ Edit</button>'+
           '<button class="mine-link" type="button" data-del-member="'+esc(ref)+'" data-house="'+esc(houseId)+'">Remove</button>'+
@@ -1330,6 +1348,12 @@
     }
   });
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)closeModal();});
+  /* 키보드로도 이미지 박스 전환 (Enter/Space) */
+  document.addEventListener("keydown",function(e){
+    if(e.key!=="Enter"&&e.key!==" ")return;
+    var p=e.target.closest&&e.target.closest(".plate.flip");
+    if(p){e.preventDefault();p.classList.toggle("flipped");}
+  });
 
   function flash(sel){
     var el=index.querySelector(sel);
@@ -1451,11 +1475,10 @@
      내가 등록한 항목의 "Remove/Edit" 클릭을 감지해서
      확인 창을 띄운 뒤 저장소에서 지우거나 수정 폼을 엶 */
   index.addEventListener("click",function(e){
-    var bt=e.target.closest("[data-bio-toggle]");
-    if(bt){
+    var fp=e.target.closest(".plate.flip");
+    if(fp){
       e.stopPropagation();
-      var bio=bt.parentElement.querySelector(".bio");
-      if(bio){bio.classList.toggle("on");bt.textContent=bio.classList.contains("on")?"▴ 소개 접기":"▾ 소개 보기";}
+      fp.classList.toggle("flipped");
       return;
     }
     var del=e.target.closest("[data-del-agent]");
@@ -1474,10 +1497,9 @@
   });
   detail.addEventListener("click",function(e){
     var t;
-    if((t=e.target.closest("[data-bio-toggle]"))){
-      /* 소개(약력) 드롭다운 열기/닫기 */
-      var bio=t.parentElement.querySelector(".bio");
-      if(bio){bio.classList.toggle("on");t.textContent=bio.classList.contains("on")?"▴ 소개 접기":"▾ 소개 보기";}
+    if((t=e.target.closest(".plate.flip"))){
+      /* 이미지 박스 클릭 → 앞뒷면 전환 (소개 보기/닫기) */
+      t.classList.toggle("flipped");
     }else if((t=e.target.closest("[data-edit-member]"))){
       var hid1=t.dataset.house,ref1=t.dataset.editMember;
       var H1=mergedHouses().filter(function(x){return x.id===hid1})[0];if(!H1)return;
