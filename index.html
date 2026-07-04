@@ -661,9 +661,9 @@
      ───────────────────────────────────────────── */
   var SCENES=[
     {id:"all",  label:"All"},
-    {id:"kiki", label:"Kiki",  color:"#D43E6E", ghost:"Kiki",  blurb:"국내에서 태어난 키키 하우스들 — 한국 볼룸씬의 심장."},
     {id:"major",label:"Major", color:"#D9A441", ghost:"Major", blurb:"아이코닉·인터내셔널 하우스들의 한국 챕터 — 메인스트림 씬."},
-    {id:"pier", label:"Pier",  color:"#2FA39B", ghost:"Pier",  blurb:"피어 씬 — 이제 막 문을 연 페이지. 직접 등록으로 채워주세요."},
+    {id:"kiki", label:"Kiki",  color:"#D43E6E", ghost:"Kiki",  blurb:"국내에서 태어난 키키 하우스들 — 한국 볼룸씬의 심장."},
+    {id:"pier", label:"Pier",  color:"#2FA39B", ghost:"Pier",  blurb:"피어 씬 — Pier House · Team · Family가 함께 걷는 곳."},
     {id:"007",  label:"007",   color:"#F0D9B0", ghost:"007",   chant:"Double-O Double-O", blurb:"하우스 없이 걷는 프리 에이전트 — 지금은 혼자, 곧 가족과."}
   ];
 
@@ -1085,15 +1085,15 @@
       '<div class="plate" style="'+plateVars(H.id)+'">'+
         photoLayers(plateImg,H.name[1])+
         '<span class="folio">'+pad(folioN-1)+'</span>'+
-        '<span class="tag'+(H.legendary?' gold':'')+'">'+(H.legendary?'★ Legendary':esc(sceneOf(H.scene).label))+'</span>'+
+        '<span class="tag'+(H.legendary?' gold':'')+'">'+(H.legendary?'★ Legendary':esc(H.scene==="pier"&&H.pierType?H.pierType:sceneOf(H.scene).label))+'</span>'+
         (plateImg?'':ghostHTML(H.name[1]))+
-        '<span class="vog">'+H.members.length+' walking · KR '+esc(H.chapter||H.founded)+'</span>'+
+        '<span class="vog">'+H.members.length+' walking · '+(H.chapter&&H.chapter!==H.founded?'KR '+esc(H.chapter):'est. '+esc(H.founded))+'</span>'+
       '</div>'+
       '<div class="caption">'+
         '<p class="kicker">'+esc(H.name[0])+(H.legendary?' · Legendary':'')+(H.mine?' · <span style="color:var(--gold)">yours</span>':'')+'</p>'+
         '<h3 class="feature-name">'+esc(H.name[1])+(H.sym?' <span class="hsym">'+H.sym+'</span>':'')+'</h3>'+
         (H.motto?'<p class="standfirst">'+esc(H.motto)+'</p>':'')+
-        (parent?'<p class="credit">'+esc(parent.t||roleLabel(parent.role))+' — <b>'+esc(parent.n)+'</b></p>':'')+
+        (parent?'<p class="credit">'+(parent.role==="custom"?esc(parent.t||"Member"):esc(roleLabel(parent.role)))+' — <b>'+esc(parent.n)+'</b></p>':'')+
       '</div>'+
     '</button>';
   }
@@ -1144,7 +1144,7 @@
   function renderIndex(){
     index.innerHTML="";folioN=0;
     var f=(qInput.value||"").trim().toLowerCase();
-    var list=currentScene==="all"?["kiki","major","007"]:[currentScene];
+    var list=currentScene==="all"?["major","kiki","pier","007"]:[currentScene];
     var html="",any=false;
     list.forEach(function(sid){
       var sc=sceneOf(sid);
@@ -1182,6 +1182,7 @@
     return '<figure class="portrait reveal" style="--accent:'+esc(accent)+'">'+
       '<div class="plate" style="'+plateVars(m.n)+'">'+
         photoLayers(m.photo,m.n)+
+        (m.honor?'<span class="tag gold">'+esc(m.honor)+'</span>':'')+
         (m.photo?'':ghostHTML(m.n))+
         '<span class="vog">since ’'+esc(String(m.since).slice(2))+'</span>'+
       '</div>'+
@@ -1190,7 +1191,7 @@
           ?'<span class="role member">'+esc(m.t||"Member")+'</span>'
           :'<span class="role '+esc(m.role)+'">'+esc(roleLabel(m.role))+'</span>')+
         '<h4 class="pname">'+esc(m.n)+'</h4>'+
-        '<p class="pcredit">'+(m.t&&m.role!=="custom"?esc(m.t):(m.cat?'The category — <b>'+esc(m.cat)+'</b>':'&nbsp;'))+'</p>'+
+        '<p class="pcredit">'+(m.cat?'The category — <b>'+esc(m.cat)+'</b>':'&nbsp;')+'</p>'+
         (m.bio?'<button class="bio-toggle" type="button" data-bio-toggle>▾ 소개 보기</button><div class="bio">'+esc(m.bio)+'</div>':'')+
         '<span class="edit-links">'+
           '<button class="mine-link gold-link" type="button" data-edit-member="'+esc(ref)+'" data-house="'+esc(houseId)+'">✎ Edit</button>'+
@@ -1216,21 +1217,21 @@
       '</div>'+
       '<div class="spread-head">'+
         '<div class="spread-title">'+
-          '<p class="est">'+esc(H.name[0])+' · '+esc(sceneOf(H.scene).label)+' scene'+(H.legendary?' · ★ Legendary':'')+(H.mine?' · yours':'')+'</p>'+
+          '<p class="est">'+esc(H.name[0])+' · '+(H.scene==="pier"&&H.pierType?esc(H.pierType)+' · Pier scene':esc(sceneOf(H.scene).label)+' scene')+(H.legendary?' · ★ Legendary':'')+(H.mine?' · yours':'')+'</p>'+
           '<h2><em>'+esc(H.name[1])+'</em>'+(H.sym?' <span class="hsym">'+H.sym+'</span>':'')+'</h2>'+
           (H.motto?'<p class="motto">'+esc(H.motto)+'</p>':'')+
           '<div class="stats">'+
             '<div class="stat"><div class="n">'+esc(H.founded)+'</div><div class="l">Founded</div></div>'+
-            '<div class="stat"><div class="n">'+esc(H.chapter||"—")+'</div><div class="l">KR Chapter</div></div>'+
+            (H.chapter&&H.chapter!==H.founded?'<div class="stat"><div class="n">'+esc(H.chapter)+'</div><div class="l">KR Chapter</div></div>':'')+
             '<div class="stat"><div class="n">'+H.members.length+'</div><div class="l">Members</div></div>'+
           '</div>'+
         '</div>'+
         '<div class="lead-plate plate" style="--accent:'+esc(H.accent)+';'+plateVars(H.id+"-lead")+'">'+
           (function(){
-            var lp=H.photo||(mother&&mother.photo);  // 하우스 이미지 > 마더 사진 > 이름 유령글자
+            var lp=H.photo||(mother&&mother.photo);  // 하우스 이미지 > 마더 사진 > 하우스 이름
             return photoLayers(lp,H.name[1])+
-              (lp?'':ghostHTML(mother?mother.n:H.name[1]))+
-              (mother?'<span class="vog">'+esc(mother.t||"Mother")+' — '+esc(mother.n)+'</span>':'');
+              (lp?'':ghostHTML(H.name[1]))+
+              (mother?'<span class="vog">Mother — '+esc(mother.n)+'</span>':'');
           })()+
         '</div>'+
       '</div>'+
@@ -1269,6 +1270,9 @@
   var formState={kind:"house",editId:null};
 
   document.getElementById("catList").innerHTML=CATS.map(function(c){return '<option value="'+c+'">'}).join("");
+  /* 칭호 자동완성 목록 — 자유 입력도 가능 */
+  document.getElementById("catList").insertAdjacentHTML("afterend",
+    '<datalist id="honorList">'+["Icon","Legendary","Up & Coming","Trailblazer"].map(function(x){return '<option value="'+x+'">'}).join("")+'</datalist>');
 
   var KINDS=[
     {id:"house", label:"New House",   title:'Found <em>a House</em>'},
@@ -1345,9 +1349,15 @@
     var h="";
     if(kind==="house"){
       var E=editHouse||{};
-      h+=fld("Scene",'<select class="finput" name="scene">'+["kiki","major","pier"].map(function(s){
+      h+=fld("Scene",'<select class="finput" name="scene">'+["major","kiki","pier"].map(function(s){
           return '<option value="'+s+'"'+((E.scene||"kiki")===s?' selected':'')+'>'+sceneOf(s).label+'</option>';}).join("")+'</select>',
-        "Kiki — 국내 태생 · Major — 해외 하우스의 한국 챕터 · Pier — 피어 씬");
+        "Major — 해외 하우스의 한국 챕터 · Kiki — 국내 태생 · Pier — 피어 씬");
+      /* Pier 선택 시에만 나타나는 세부 분류 */
+      h+='<div class="frow" id="pierTypeWrap"'+((E.scene||"kiki")==="pier"?'':' style="display:none"')+'>'+
+        '<label class="flabel">Pier 세부 분류</label>'+
+        '<select class="finput" name="pierType">'+["Pier House","Team","Family"].map(function(p){
+          return '<option'+((E.pierType||"Pier House")===p?' selected':'')+'>'+p+'</option>';}).join("")+'</select>'+
+        '<p class="fhint">카드 우측 상단 태그로 표시돼요</p></div>';
       h+='<div class="fgrid">'+
         fld("수식어 (prefix)",txt("hprefix",E.name?E.name[0]:"House of","House of"))+
         fld("이름",txt("hname",E.name?E.name[1]:"","Love, Kitsch, Juun.j…",' required'))+
@@ -1358,7 +1368,7 @@
       h+=fld("House colour",swatchRow(E.accent),"마지막 무지개 동그라미를 누르면 스펙트럼에서 직접 고를 수 있어요");
       h+='<div class="fgrid">'+
         fld("Founded",'<input class="finput" type="number" name="founded" min="1970" max="2026" value="'+esc(E.founded||2026)+'">')+
-        fld("KR Chapter",'<input class="finput" type="number" name="chapter" min="1970" max="2026" value="'+esc(E.chapter||E.founded||2026)+'">')+
+        fld("KR Chapter <b>(optional)</b>",'<input class="finput" type="number" name="chapter" min="1970" max="2026" value="'+esc(E.chapter&&E.chapter!==E.founded?E.chapter:"")+'" placeholder="한국 태생이면 비워두세요">')+
       '</div>';
       h+=photoField("hphoto","House image <b>(optional)</b>",E.photo);
       if(!editHouse)h+='<p class="fhint" style="margin-bottom:16px">Mother/Father를 포함한 구성원은 하우스를 만든 뒤 “New member” 탭에서 등록해요.</p>';
@@ -1384,6 +1394,7 @@
         '<label class="flabel">직함 직접 입력</label>'+
         txt("roleCustom",isCustom?M.t:"","예: 코리아 오버시어, 갓마더, 트레일블레이저…")+
       '</div>';
+      h+=fld("칭호 <b>(optional)</b>",txt("mhonor",M.honor,"Icon, Legendary, Up & Coming, Trailblazer…",' list="honorList"'),"프로필 우측 상단에 금빛 태그로 표시돼요");
       h+='<div class="fgrid">'+fld("The category <b>(optional)</b>",catInput("mcat",M.cat))+
         fld("Walking since",'<input class="finput" type="number" name="since" min="1970" max="2026" value="'+esc(M.since||2026)+'">')+'</div>';
       h+=fld("소개 / 약력 <b>(optional)</b>",'<textarea class="finput" name="mbio" placeholder="약력, 수상 이력(예: ○○볼 Vogue Femme GP), 하고 싶은 이야기…">'+esc(M.bio||"")+'</textarea>');
@@ -1440,6 +1451,12 @@
     if(t.name==="role"){
       var rcw=document.getElementById("roleCustomWrap");
       if(rcw)rcw.style.display=t.value==="custom"?"":"none";
+      return;
+    }
+    /* 하우스 폼: Pier 선택 시에만 세부 분류 표시 */
+    if(t.name==="scene"){
+      var ptw=document.getElementById("pierTypeWrap");
+      if(ptw)ptw.style.display=t.value==="pier"?"":"none";
     }
   });
   document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!modal.hidden)closeModal();});
@@ -1466,7 +1483,9 @@
       var fields={
         scene:v("scene"),name:[v("hprefix")||"House of",v("hname")],
         motto:v("motto"),chant:v("chant"),notes:v("hnotes"),
-        accent:accentVal(),founded:+v("founded")||2026,chapter:+v("chapter")||(+v("founded")||2026)
+        accent:accentVal(),founded:+v("founded")||2026,
+        chapter:+v("chapter")||null,   // 비워두면 표시 안 함 (한국 태생 하우스)
+        pierType:v("scene")==="pier"?(v("pierType")||"Pier House"):null
       };
       if(pendingPhotos.hphoto)fields.photo=pendingPhotos.hphoto;
 
@@ -1494,7 +1513,7 @@
          표준 role을 유지한 채 다른 항목만 수정하면 기존 직함(t)은 보존 */
       var roleSel=v("role")||"child";
       var fieldsM={
-        n:v("mname"),
+        n:v("mname"),honor:v("mhonor")||null,
         cat:v("mcat")||"",since:+v("since")||2026,bio:v("mbio")||null
       };
       if(roleSel==="custom"){
