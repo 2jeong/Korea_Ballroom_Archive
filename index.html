@@ -579,6 +579,10 @@
     .feature .folio{font-size:.5rem;top:8px;left:8px}
     .feature .tag{font-size:.44rem;padding:3px 7px;top:8px;right:8px;letter-spacing:.14em}
     .feature .plate .vog{font-size:.44rem;padding:8px 8px;letter-spacing:.14em}
+
+    /* 하우스 상세의 멤버 카드 — Parents가 235px 최소폭 때문에 혼자만
+       1열로 나오던 것을 Children과 똑같이 2열로 맞춤 */
+    .roster,.parents-roster{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px}
   }
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
@@ -980,7 +984,7 @@
   function buildFeature(H){
     folioN++;   // 카드 번호(N°01, N°02…) 매기기
     var parent=H.members.filter(function(m){return m.role==="mother"})[0]||H.members[0];
-    var plateImg=H.photo||(parent&&parent.photo);  // 하우스 이미지 우선, 없으면 마더 사진
+    var plateImg=H.photo;  // 하우스 이미지 전용 — 마더 사진과 분리 (없으면 하우스 이름 유령글자)
     return '<button class="feature reveal" type="button" data-id="'+esc(H.id)+'" style="--accent:'+esc(H.accent)+'" aria-label="Open '+esc(H.name.join(" "))+'">'+
       '<div class="plate" style="'+plateVars(H.id)+'">'+
         photoLayers(plateImg,H.name[1])+
@@ -1137,7 +1141,7 @@
         '</div>'+
         '<div class="lead-plate plate" style="--accent:'+esc(H.accent)+';'+plateVars(H.id+"-lead")+'">'+
           (function(){
-            var lp=H.photo||(mother&&mother.photo);  // 하우스 이미지 > 마더 사진 > 하우스 이름
+            var lp=H.photo;  // 하우스 이미지 전용 — 마더 사진과 분리 (없으면 하우스 이름 유령글자)
             return photoLayers(lp,H.name[1])+
               '<span class="tag'+(H.legendary?' gold':'')+'">'+(H.legendary?'★ Legendary':esc(H.scene==="pier"&&H.pierType?H.pierType:sceneOf(H.scene).label))+'</span>'+
               (lp?'':ghostHTML(H.name[1]))+
