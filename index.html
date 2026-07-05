@@ -564,6 +564,20 @@
     .toolbar{flex-direction:column;align-items:stretch}
     .btn{text-align:center}
     .scene-ghost{font-size:4.6rem;top:-20px}
+
+    /* 검색창 — 큰 이탤릭 폰트 때문에 실제보다 커 보이던 것을 축소 */
+    .search{padding:0 2px 7px;gap:8px}
+    .search input{font-size:.92rem}
+    .search svg{width:15px;height:15px;flex:none}
+
+    /* 하우스 카드 그리드 — 2열로, 이미지는 작게, 이름 아래 텍스트는 생략 */
+    .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 10px}
+    .feature .caption{padding:9px 1px 0}
+    .feature .kicker,.feature .standfirst,.feature .credit{display:none}
+    .feature .feature-name{font-size:1.05rem;line-height:1.15}
+    .feature .folio{font-size:.5rem;top:8px;left:8px}
+    .feature .tag{font-size:.44rem;padding:3px 7px;top:8px;right:8px;letter-spacing:.14em}
+    .feature .plate .vog{font-size:.44rem;padding:8px 8px;letter-spacing:.14em}
   }
   @media (prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important}
