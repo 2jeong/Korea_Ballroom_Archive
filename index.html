@@ -565,8 +565,9 @@
     .btn{text-align:center}
     .scene-ghost{font-size:4.6rem;top:-20px}
 
-    /* 검색창 — 큰 이탤릭 폰트 때문에 실제보다 커 보이던 것을 축소 */
-    .search{padding:0 2px 7px;gap:8px}
+    /* 검색창 — flex:1 1 250px의 "250px"가 세로 배치에선 높이로
+       적용돼서 250px 높이의 빈 상자가 되던 버그. flex를 꺼서 해결 */
+    .search{flex:0 0 auto;padding:0 2px 7px;gap:8px}
     .search input{font-size:.92rem}
     .search svg{width:15px;height:15px;flex:none}
 
@@ -860,6 +861,9 @@
   }
   function roleLabel(r){return {mother:"Mother",father:"Father",child:"Child",legend:"Legendary",princess:"Princess",prince:"Prince",queen:"Queen",overseer:"Overseer",god:"God Parent",parent:"Founding Parent",member:"Member"}[r]||r;}
   function pad(i){return (i<9?"N°0":"N°")+(i+1);}
+  /* 이름 기준 정렬 비교자 — 하우스/멤버 목록을 새로 등록해도
+     끝에 쌓이지 않고 알파벳·가나다 순 제자리에 들어가게 함 */
+  function byName(a,b){return String(a.n||a.name[1]).localeCompare(String(b.n||b.name[1]),undefined,{sensitivity:"base",numeric:true});}
   /* 한글·한자 포함 여부 — 세리프 영문 글꼴(Didot 등)엔 한글이 없어서
      대체 글꼴로 렌더링되는데, 그 글꼴은 글자가 줄 상자를 꽉 채워서
      line-height를 좁게 잡으면 위 요소와 거의 붙어 보임 (제목에서 보정용) */
@@ -1059,6 +1063,7 @@
       }else{
         var hs=mergedHouses().filter(function(H){return H.scene===sid;}).filter(function(H){
           if(!f)return true;var hay=(H.name.join(" ")+" "+H.members.map(function(m){return m.n}).join(" ")).toLowerCase();return hay.indexOf(f)>-1;});
+        hs.sort(byName);  // 새로 등록해도 끝에 붙지 않고 알파벳/가나다 순 제자리에
         /* 빈 씬(예: 새로 연 Pier)도 직접 선택했을 땐 초대 문구와 함께 표시 */
         if(!hs.length&&currentScene!==sid)return;
         any=true;
@@ -1108,8 +1113,11 @@
     var H=mergedHouses().filter(function(x){return x.id===id})[0];if(!H)return;
     detail.style.setProperty("--accent",H.accent);
     var mother=H.members.filter(function(m){return m.role==="mother"})[0];
-    var parents=H.members.filter(function(m){return m.role==="mother"||m.role==="father"});
-    var children=H.members.filter(function(m){return m.role!=="mother"&&m.role!=="father"});
+    /* Mother/Father는 역할 순서를 우선하고, 그 안에서 이름순.
+       나머지 멤버는 이름순 — 새로 추가하거나 수정해도 끝에 쌓이지 않게 */
+    var parents=H.members.filter(function(m){return m.role==="mother"||m.role==="father"})
+      .sort(function(a,b){return (a.role===b.role)?byName(a,b):(a.role==="mother"?-1:1);});
+    var children=H.members.filter(function(m){return m.role!=="mother"&&m.role!=="father"}).sort(byName);
     detail.innerHTML=
       '<button class="back" type="button" id="backBtn">← Back to the issue</button>'+
       '<div class="manage">'+
@@ -1220,7 +1228,7 @@
     '</div>';
   }
   function houseSelect(scene,selectedId){
-    var hs=mergedHouses().filter(function(H){return !scene||H.scene===scene});
+    var hs=mergedHouses().filter(function(H){return !scene||H.scene===scene}).sort(byName);
     if(!hs.length)return '<select class="finput" name="houseId" disabled><option value="">이 씬에는 아직 하우스가 없어요</option></select>';
     return '<select class="finput" name="houseId">'+hs.map(function(H){
       return '<option value="'+esc(H.id)+'"'+(H.id===selectedId?' selected':'')+'>'+esc(H.name.join(" "))+'</option>';
